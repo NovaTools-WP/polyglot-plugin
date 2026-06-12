@@ -410,6 +410,21 @@ class TranslationsController {
 				'default'           => 'not_translated',
 				'sanitize_callback' => 'sanitize_text_field',
 			),
+			'title' => array(
+				'description'       => __( 'Translated element title.', 'novatools-polyglot' ),
+				'type'              => 'string',
+				'sanitize_callback' => 'sanitize_text_field',
+			),
+			'content' => array(
+				'description'       => __( 'Translated element content.', 'novatools-polyglot' ),
+				'type'              => 'string',
+				'sanitize_callback' => 'wp_kses_post',
+			),
+			'excerpt' => array(
+				'description'       => __( 'Translated element excerpt.', 'novatools-polyglot' ),
+				'type'              => 'string',
+				'sanitize_callback' => 'sanitize_textarea_field',
+			),
 		);
 	}
 }

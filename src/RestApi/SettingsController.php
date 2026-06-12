@@ -11,6 +11,7 @@
 namespace NovaTools\Polyglot\RestApi;
 
 use NovaTools\Polyglot\Support\OptionStore;
+use NovaTools\Polyglot\Core\Plugin;
 use WP_Error;
 use WP_REST_Request;
 use WP_REST_Response;
@@ -75,6 +76,12 @@ class SettingsController {
 				__( 'Invalid settings data.', 'novatools-polyglot' ),
 				array( 'status' => 400 )
 			);
+		}
+
+		$plugin = Plugin::getInstance();
+		if ( $plugin->has( 'admin.menu_registrar' ) ) {
+			$registrar = $plugin->get( 'admin.menu_registrar' );
+			$settings  = $registrar->sanitizeSettings( $settings );
 		}
 
 		$store  = new OptionStore();

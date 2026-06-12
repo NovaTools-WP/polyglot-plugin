@@ -189,7 +189,7 @@ class StringsController {
 
 		$domain  = sanitize_text_field( $request->get_param( 'domain' ) );
 		$name    = sanitize_text_field( $request->get_param( 'name' ) );
-		$value   = $request->get_param( 'value' );
+		$value   = wp_kses_post( $request->get_param( 'value' ) );
 		$context = sanitize_text_field( $request->get_param( 'context' ) ) ?: '';
 
 		if ( empty( $domain ) || empty( $name ) ) {
@@ -266,7 +266,7 @@ class StringsController {
 
 		$stringId = absint( $request->get_param( 'id' ) );
 		$language = sanitize_text_field( $request->get_param( 'language' ) );
-		$value    = $request->get_param( 'value' );
+		$value    = wp_kses_post( $request->get_param( 'value' ) );
 		$status   = $request->get_param( 'status' ) !== null
 			? absint( $request->get_param( 'status' ) )
 			: 1;
@@ -421,9 +421,10 @@ class StringsController {
 				'sanitize_callback' => 'sanitize_text_field',
 			),
 			'value' => array(
-				'description' => __( 'The source string value.', 'novatools-polyglot' ),
-				'type'        => 'string',
-				'required'    => true,
+				'description'       => __( 'The source string value.', 'novatools-polyglot' ),
+				'type'              => 'string',
+				'required'          => true,
+				'sanitize_callback' => 'wp_kses_post',
 			),
 			'context' => array(
 				'description'       => __( 'Optional grouping context.', 'novatools-polyglot' ),
@@ -468,9 +469,10 @@ class StringsController {
 				'sanitize_callback' => 'sanitize_text_field',
 			),
 			'value' => array(
-				'description' => __( 'The translated string value.', 'novatools-polyglot' ),
-				'type'        => 'string',
-				'required'    => true,
+				'description'       => __( 'The translated string value.', 'novatools-polyglot' ),
+				'type'              => 'string',
+				'required'          => true,
+				'sanitize_callback' => 'wp_kses_post',
 			),
 			'status' => array(
 				'description' => __( 'Translation status: 0 = untranslated, 1 = translated, 2 = needs_update.', 'novatools-polyglot' ),

@@ -270,6 +270,11 @@ class PoEditorController {
 	private function isAllowedPath( string $path ): bool {
 		$path = wp_normalize_path( $path );
 
+		// Prevent directory traversal using '..'
+		if ( false !== strpos( $path, '..' ) ) {
+			return false;
+		}
+
 		$allowed_roots = array(
 			wp_normalize_path( WP_LANG_DIR ),
 			wp_normalize_path( WP_PLUGIN_DIR ),

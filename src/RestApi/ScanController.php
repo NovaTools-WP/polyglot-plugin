@@ -589,6 +589,17 @@ class ScanController {
 					);
 				}
 
+				// Enforce that the path is within the WordPress installation directory.
+				$abs_path = wp_normalize_path( realpath( ABSPATH ) ?: ABSPATH );
+				$normalized_real = wp_normalize_path( $real );
+				if ( 0 !== strpos( $normalized_real, $abs_path ) ) {
+					return new WP_Error(
+						'polyglot_invalid_path',
+						__( 'Directory must be within the WordPress installation directory.', 'novatools-polyglot' ),
+						array( 'status' => 403 )
+					);
+				}
+
 				return $real;
 
 			default:
