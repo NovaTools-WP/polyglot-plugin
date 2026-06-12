@@ -56,9 +56,6 @@ class ExchangeRateService {
 	 */
 	public function register(): void {
 		add_action( self::CRON_HOOK, array( $this, 'updateRates' ) );
-
-		// Keep the cron schedule aligned with the configured frequency.
-		add_action( 'init', array( $this, 'scheduleEvent' ) );
 	}
 
 	/**
@@ -91,6 +88,19 @@ class ExchangeRateService {
 		}
 
 		wp_schedule_event( time() + $interval, $this->getSchedule(), self::CRON_HOOK );
+	}
+
+	/**
+	 * Schedule the exchange-rate cron event during plugin activation.
+	 *
+	 * Called from Activator::activate() so that wp_next_scheduled() is not
+	 * checked on every page load via an `init` hook.
+	 *
+	 * @return void
+	 */
+	public static function scheduleOnActivation(): void {
+		$service = new self( new OptionStore(), new Cache() );
+		$service->scheduleEvent();
 	}
 
 	/**

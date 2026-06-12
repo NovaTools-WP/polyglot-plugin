@@ -257,27 +257,29 @@ class TranslationRepository {
 	/**
 	 * Get the next available trid (max + 1).
 	 *
-	 * Used when creating a new translation group for a fresh element.
+	 * Uses SELECT ... FOR UPDATE inside a transaction to prevent two
+	 * concurrent requests from reading the same MAX(trid) and inserting
+	 * duplicate translation groups.
 	 *
 	 * @return int
 	 */
 	public function getNextTrid(): int {
-		$cached = wp_cache_get( 'polyglot_next_trid', 'polyglot' );
-
-		if ( false !== $cached ) {
-			return (int) $cached + 1;
-		}
-
 		global $wpdb;
 
 		$table = Schema::getTableName( 'polyglot_translations' );
 
-		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
-		$max = (int) $wpdb->get_var( "SELECT MAX(trid) FROM {$table}" );
+		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		$wpdb->query( 'START TRANSACTION' );
+
+		$max = (int) $wpdb->get_var( "SELECT MAX(trid) FROM {$table} FOR UPDATE" );
+		$next = $max + 1;
+
+		$wpdb->query( 'COMMIT' );
+		// phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 
 		wp_cache_set( 'polyglot_next_trid', $max, 'polyglot' );
 
-		return $max + 1;
+		return $next;
 	}
 
 	/**

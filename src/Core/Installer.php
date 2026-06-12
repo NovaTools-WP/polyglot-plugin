@@ -14,6 +14,7 @@ namespace NovaTools\Polyglot\Core;
 
 use NovaTools\Polyglot\Database\Schema;
 use NovaTools\Polyglot\Traits\FlushesCache;
+use NovaTools\Polyglot\WooCommerce\Currency\ExchangeRateService;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -108,6 +109,11 @@ class Installer {
 		// Run version-specific migrations in order.
 		// Example: if ( version_compare( $from, '1.1.0', '<' ) ) { ... }
 		// Add migration blocks here as the plugin evolves.
+
+		// Move exchange-rate cron scheduling from init hook to activation.
+		if ( version_compare( $from, '1.0.1', '<' ) ) {
+			ExchangeRateService::scheduleOnActivation();
+		}
 
 		/**
 		 * Fires after a Polyglot version upgrade.

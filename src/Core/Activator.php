@@ -13,6 +13,7 @@ namespace NovaTools\Polyglot\Core;
 
 use NovaTools\Polyglot\Database\Schema;
 use NovaTools\Polyglot\TranslationApi\OpenAIProvider;
+use NovaTools\Polyglot\WooCommerce\Currency\ExchangeRateService;
 
 defined('ABSPATH') || exit;
 
@@ -44,6 +45,9 @@ class Activator
 
         // Set initial plugin settings on first activation.
         static::setInitialSettings();
+
+        // Schedule exchange-rate cron event (avoids checking on every init).
+        ExchangeRateService::scheduleOnActivation();
 
         /**
          * Fires after the Polyglot plugin has been activated.

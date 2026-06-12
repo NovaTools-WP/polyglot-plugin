@@ -369,8 +369,8 @@ class ThemePluginPage {
 		?>
 		<script type="text/javascript">
 		jQuery( document ).ready( function( $ ) {
-			var nonce = '<?php echo esc_js( $po_nonce ); ?>';
-			var ajaxUrl = '<?php echo esc_url( $ajax_url ); ?>';
+			var nonce = <?php echo wp_json_encode( $po_nonce ); ?>;
+			var ajaxUrl = <?php echo wp_json_encode( $ajax_url ); ?>;
 
 			// Save PO file via AJAX.
 			$( '#polyglot_save_po' ).closest( 'form' ).on( 'submit', function( e ) {

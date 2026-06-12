@@ -24,6 +24,13 @@ defined( 'ABSPATH' ) || exit;
 class TranslationMemory {
 
 	/**
+	 * Maximum number of index entries to scan per suggestion request.
+	 *
+	 * @var int
+	 */
+	const MAX_INDEX_SIZE = 500;
+
+	/**
 	 * Cache wrapper instance.
 	 *
 	 * @var Cache
@@ -145,8 +152,19 @@ class TranslationMemory {
 
 		$suggestions = array();
 		$source_norm = $this->normalise( $source );
+		$source_len  = strlen( $source_norm );
 
-		foreach ( $index_data as $norm_key ) {
+		// Limit the scan to avoid CPU spikes on large indexes.
+		$candidates = array_slice( $index_data, 0, self::MAX_INDEX_SIZE );
+
+		// Pre-filter by string length — skip entries that can't possibly be similar.
+		if ( $source_len > 0 ) {
+			$candidates = array_filter( $candidates, static function ( string $key ) use ( $source_len ): bool {
+				return abs( strlen( $key ) - $source_len ) < $source_len * 0.5;
+			} );
+		}
+
+		foreach ( $candidates as $norm_key ) {
 			$cache_key = $this->cache->key( 'tm_entry', $norm_key );
 			$entry     = $this->cache->get( $cache_key );
 
@@ -193,9 +211,10 @@ class TranslationMemory {
 	/**
 	 * Calculate similarity between two normalised strings.
 	 *
-	 * Uses a combination of same-string comparison (1.0), and the
-	 * PHP `similar_text()` function for fuzzy matching. This keeps
-	 * the implementation simple while providing useful results.
+	 * Uses Levenshtein distance with an early-exit optimisation: if
+	 * the distance already exceeds 70% of the maximum length the
+	 * strings cannot meet the similarity threshold and we bail out
+	 * immediately.
 	 *
 	 * @param string $a Normalised string A.
 	 * @param string $b Normalised string B.
@@ -206,24 +225,20 @@ class TranslationMemory {
 			return 1.0;
 		}
 
-		// Quick length check — if the length difference is too large,
-		// the strings are unlikely to be similar enough.
-		$len_a = mb_strlen( $a );
-		$len_b = mb_strlen( $b );
+		$max_len = max( strlen( $a ), strlen( $b ) );
 
-		if ( 0 === $len_a || 0 === $len_b ) {
+		if ( 0 === $max_len ) {
 			return 0.0;
 		}
 
-		$ratio = min( $len_a, $len_b ) / max( $len_a, $len_b );
+		$distance = levenshtein( $a, $b );
 
-		if ( $ratio < $this->minSimilarity ) {
+		// Early exit — distance too large to meet threshold.
+		if ( $distance > $max_len * 0.7 ) {
 			return 0.0;
 		}
 
-		similar_text( $a, $b, $percent );
-
-		return $percent / 100.0;
+		return 1.0 - ( $distance / $max_len );
 	}
 
 	/**

@@ -52,11 +52,14 @@ class AutoTranslator {
 	const STRINGS_PER_BATCH = 25;
 
 	/**
-	 * Maximum number of untranslated strings to fetch per language.
+	 * Number of untranslated strings to fetch per page.
+	 *
+	 * Used for cursor-based pagination when loading untranslated strings,
+	 * keeping memory usage bounded instead of loading all at once.
 	 *
 	 * @var int
 	 */
-	const MAX_UNTRANSLATED_STRINGS = 5000;
+	const STRINGS_PER_PAGE = 500;
 
 	/**
 	 * Provider registry for looking up translation providers.
@@ -86,9 +89,9 @@ class AutoTranslator {
 	/**
 	 * Auto-translate all untranslated strings for a given language.
 	 *
-	 * Fetches untranslated strings from the database, batches them, and sends
-	 * each batch to the configured provider. Records the provider name in the
-	 * `provider` column for each saved translation.
+	 * Fetches untranslated strings in pages using cursor-based pagination,
+	 * batches them, and sends each batch to the configured provider. Records
+	 * the provider name in the `provider` column for each saved translation.
 	 *
 	 * @param string      $language   Target language code.
 	 * @param string|null $providerId Optional provider override. Defaults to configured provider.
@@ -102,13 +105,32 @@ class AutoTranslator {
 		}
 
 		$sourceLang = $this->getSourceLanguage();
-		$strings    = $this->getUntranslatedStrings( $language );
+		$totalTranslated = 0;
+		$totalFailed     = 0;
+		$totalSkipped    = 0;
+		$afterId         = 0;
 
-		if ( empty( $strings ) ) {
-			return array( 'translated' => 0, 'failed' => 0, 'skipped' => 0 );
-		}
+		do {
+			$strings = $this->getUntranslatedStrings( $language, $afterId );
 
-		return $this->processStrings( $strings, $sourceLang, $language, $provider );
+			if ( empty( $strings ) ) {
+				break;
+			}
+
+			$result = $this->processStrings( $strings, $sourceLang, $language, $provider );
+
+			$totalTranslated += $result['translated'];
+			$totalFailed     += $result['failed'];
+			$totalSkipped    += $result['skipped'];
+
+			$afterId = (int) end( $strings )['id'];
+		} while ( count( $strings ) === self::STRINGS_PER_PAGE );
+
+		return array(
+			'translated' => $totalTranslated,
+			'failed'     => $totalFailed,
+			'skipped'    => $totalSkipped,
+		);
 	}
 
 	/**
@@ -327,15 +349,17 @@ class AutoTranslator {
 	}
 
 	/**
-	 * Get all untranslated strings for a given language.
+	 * Get a page of untranslated strings for a given language.
 	 *
 	 * Returns strings that do not yet have a translation in the target language,
-	 * or whose existing translation has status 0 (untranslated).
+	 * or whose existing translation has status 0 (untranslated). Uses
+	 * cursor-based pagination via $afterId to avoid OFFSET overhead.
 	 *
 	 * @param string $language Target language code.
+	 * @param int    $afterId  Fetch strings with id greater than this value. Default 0.
 	 * @return array<int, array{id: int, value: string}>
 	 */
-	private function getUntranslatedStrings( string $language ): array {
+	private function getUntranslatedStrings( string $language, int $afterId = 0 ): array {
 		global $wpdb;
 
 		$strings_table    = Schema::getTableName( 'polyglot_strings' );
@@ -350,11 +374,13 @@ class AutoTranslator {
 				 LEFT JOIN {$translations_table} st
 				     ON st.string_id = s.id AND st.language = %s AND st.status = %d
 				 WHERE st.id IS NULL
+				   AND s.id > %d
 				 ORDER BY s.id
 				 LIMIT %d",
 				$language,
 				StringManager::STATUS_TRANSLATED,
-				self::MAX_UNTRANSLATED_STRINGS
+				$afterId,
+				self::STRINGS_PER_PAGE
 			),
 			ARRAY_A
 		);
