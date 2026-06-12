@@ -4,7 +4,6 @@ import {
   LoadingSpinner,
   ErrorState,
   Toast,
-  PolyglotNav,
 } from "@/admin/components/shared";
 
 export default function Languages() {
@@ -106,8 +105,7 @@ export default function Languages() {
   if (error) return <ErrorState message={error} onRetry={fetchLanguages} />;
 
   return (
-    <div className="p-6">
-      <PolyglotNav />
+    <div>
       <div className="mb-6 flex items-center justify-between">
         <h1 className="text-2xl font-bold text-gray-900">Languages</h1>
         <button

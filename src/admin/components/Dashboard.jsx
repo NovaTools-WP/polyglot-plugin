@@ -5,7 +5,6 @@ import {
   ErrorState,
   ProgressBar,
   StatCard,
-  PolyglotNav,
 } from "@/admin/components/shared";
 
 export default function Dashboard() {
@@ -70,8 +69,7 @@ export default function Dashboard() {
       : 0;
 
   return (
-    <div className="p-6">
-      <PolyglotNav />
+    <div>
       <h1 className="mb-6 text-2xl font-bold text-gray-900">
         Polyglot Dashboard
       </h1>

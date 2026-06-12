@@ -4,7 +4,6 @@ import {
   LoadingSpinner,
   ErrorState,
   Toast,
-  PolyglotNav,
 } from "@/admin/components/shared";
 
 export default function StringTranslation() {
@@ -133,8 +132,7 @@ export default function StringTranslation() {
     );
 
   return (
-    <div className="p-6">
-      <PolyglotNav />
+    <div>
       <div className="mb-6 flex items-center justify-between">
         <h1 className="text-2xl font-bold text-gray-900">String Translation</h1>
         <button

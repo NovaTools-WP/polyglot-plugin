@@ -4,7 +4,6 @@ import {
   LoadingSpinner,
   ErrorState,
   Toast,
-  PolyglotNav,
 } from "@/admin/components/shared";
 
 const STATUS_COLORS = {
@@ -114,8 +113,7 @@ export default function Translations() {
   if (error) return <ErrorState message={error} onRetry={fetchData} />;
 
   return (
-    <div className="p-6">
-      <PolyglotNav />
+    <div>
       <h1 className="mb-6 text-2xl font-bold text-gray-900">Translations</h1>
 
       <div className="mb-4 flex gap-4">

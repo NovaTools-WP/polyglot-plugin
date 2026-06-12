@@ -4,7 +4,6 @@ import {
   LoadingSpinner,
   ErrorState,
   Toast,
-  PolyglotNav,
 } from "@/admin/components/shared";
 
 export default function ImportWpml() {
@@ -169,7 +168,7 @@ export default function ImportWpml() {
     Object.keys(detectedData.tables).length > 0;
 
   return (
-    <div className="p-6">
+    <div>
       {toast && (
         <Toast
           message={toast.message}
@@ -177,7 +176,6 @@ export default function ImportWpml() {
           onClose={() => setToast(null)}
         />
       )}
-      <PolyglotNav />
 
       <div className="mb-6 flex items-center justify-between">
         <h1 className="text-2xl font-bold text-gray-900">Import from WPML</h1>

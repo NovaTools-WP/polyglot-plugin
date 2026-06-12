@@ -4,7 +4,6 @@ import {
   LoadingSpinner,
   ErrorState,
   Toast,
-  PolyglotNav,
 } from "@/admin/components/shared";
 
 const URL_STRATEGIES = [
@@ -125,8 +124,7 @@ export default function Settings() {
   if (error) return <ErrorState message={error} onRetry={fetchData} />;
 
   return (
-    <div className="p-6">
-      <PolyglotNav />
+    <div>
       <div className="mb-6 flex items-center justify-between">
         <h1 className="text-2xl font-bold text-gray-900">Settings</h1>
         <button

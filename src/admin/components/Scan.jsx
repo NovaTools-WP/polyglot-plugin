@@ -4,7 +4,6 @@ import {
   LoadingSpinner,
   ErrorState,
   Toast,
-  PolyglotNav,
 } from "@/admin/components/shared";
 
 export default function Scan() {
@@ -138,8 +137,7 @@ export default function Scan() {
   };
 
   return (
-    <div className="p-6">
-      <PolyglotNav />
+    <div>
       <div className="mb-6">
         <h1 className="text-2xl font-bold text-gray-900">String Scanner</h1>
         <p className="mt-1 text-sm text-gray-500">
