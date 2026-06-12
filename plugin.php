@@ -177,6 +177,7 @@ final class NovaToolsPolyglot {
 			array( 'path' => 'polyglot/string-translation', 'component' => 'StringTranslation' ),
 			array( 'path' => 'polyglot/scan',             'component' => 'Scan' ),
 			array( 'path' => 'polyglot/settings',         'component' => 'PolyglotSettings' ),
+			array( 'path' => 'polyglot/import-wpml',      'component' => 'ImportWpml' ),
 		);
 
 		foreach ( $sub_routes as $sub ) {

@@ -33,6 +33,7 @@ class RestApiRegistrar {
 			new StringsController(),
 			new AutoTranslateController(),
 			new SettingsController(),
+			new ImportWpmlController(),
 		);
 
 		$plugin = Plugin::getInstance();
