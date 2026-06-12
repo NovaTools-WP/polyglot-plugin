@@ -71,73 +71,14 @@ class MenuRegistrar {
 	public function sanitizeSettings( array $input ): array {
 		$clean = array();
 
-		// URL strategy.
-		if ( isset( $input['url_strategy'] ) ) {
-			$clean['url_strategy']['method'] = in_array(
-				$input['url_strategy']['method'] ?? '',
-				array( 'directory', 'subdomain', 'domain', 'query_param' ),
-				true
-			) ? $input['url_strategy']['method'] : 'directory';
-
-			$clean['url_strategy']['hide_default'] = ! empty( $input['url_strategy']['hide_default'] );
-
-			if ( isset( $input['url_strategy']['domain_mapping'] ) && is_array( $input['url_strategy']['domain_mapping'] ) ) {
-				foreach ( $input['url_strategy']['domain_mapping'] as $code => $domain ) {
-					$clean['url_strategy']['domain_mapping'][ sanitize_text_field( $code ) ] = sanitize_text_field( $domain );
-				}
-			}
-		}
-
-		// Browser redirect.
-		$clean['browser_redirect']['enabled'] = ! empty( $input['browser_redirect']['enabled'] );
-
-		// API keys.
-		foreach ( array( 'deepl', 'google', 'openai' ) as $provider ) {
-			$key = $input['api'][ $provider ]['key'] ?? '';
-			$clean['api'][ $provider ]['key'] = sanitize_text_field( $key );
-		}
-
-		if ( isset( $input['api']['default_provider'] ) ) {
-			$clean['api']['default_provider'] = sanitize_text_field( $input['api']['default_provider'] );
-		}
-
-		// Custom field translation modes.
-		if ( isset( $input['custom_fields'] ) && is_array( $input['custom_fields'] ) ) {
-			foreach ( $input['custom_fields'] as $field_key => $mode ) {
-				$clean['custom_fields'][ sanitize_text_field( $field_key ) ] = in_array(
-					$mode,
-					array( 'copy', 'translate', 'ignore' ),
-					true
-				) ? $mode : 'copy';
-			}
-		}
-
-		// Post types.
-		if ( isset( $input['post_types'] ) && is_array( $input['post_types'] ) ) {
-			$clean['post_types'] = array_map( 'sanitize_text_field', $input['post_types'] );
-		}
-
-		// Taxonomies.
-		if ( isset( $input['taxonomies'] ) && is_array( $input['taxonomies'] ) ) {
-			$clean['taxonomies'] = array_map( 'sanitize_text_field', $input['taxonomies'] );
-		}
-
-		// Media.
-		$clean['media']['duplicate_on_upload'] = ! empty( $input['media']['duplicate_on_upload'] );
-
-		// WooCommerce multi-currency.
-		$clean['woocommerce']['multi_currency']['enabled'] = ! empty( $input['woocommerce']['multi_currency']['enabled'] );
-		$clean['woocommerce']['multi_currency']['mode'] = in_array(
-			$input['woocommerce']['multi_currency']['mode'] ?? 'by_language',
-			array( 'by_language', 'by_geolocation' ),
-			true
-		) ? $input['woocommerce']['multi_currency']['mode'] : 'by_language';
-
-		if ( isset( $input['woocommerce']['multi_currency']['rates'] ) && is_array( $input['woocommerce']['multi_currency']['rates'] ) ) {
-			foreach ( $input['woocommerce']['multi_currency']['rates'] as $currency => $rate ) {
-				$clean['woocommerce']['multi_currency']['rates'][ sanitize_text_field( $currency ) ] = floatval( $rate );
-			}
-		}
+		$clean['url_strategy']    = $this->sanitizeUrlStrategy( $input['url_strategy'] ?? array() );
+		$clean['browser_redirect'] = $this->sanitizeBrowserRedirect( $input['browser_redirect'] ?? array() );
+		$clean['api']             = $this->sanitizeApiKeys( $input['api'] ?? array() );
+		$clean['custom_fields']   = $this->sanitizeCustomFields( $input['custom_fields'] ?? array() );
+		$clean['post_types']      = $this->sanitizePostTypes( $input['post_types'] ?? array() );
+		$clean['taxonomies']      = $this->sanitizeTaxonomies( $input['taxonomies'] ?? array() );
+		$clean['media']           = $this->sanitizeMedia( $input['media'] ?? array() );
+		$clean['woocommerce']     = $this->sanitizeWooCommerce( $input['woocommerce'] ?? array() );
 
 		/**
 		 * Filter sanitized Polyglot settings before saving.
@@ -146,5 +87,145 @@ class MenuRegistrar {
 		 * @param array $input  Original raw input.
 		 */
 		return apply_filters( 'polyglot_sanitize_settings', $clean, $input );
+	}
+
+	// ── Domain-specific sanitizers ───────────────────────────────────
+
+	/**
+	 * Sanitize URL strategy settings.
+	 *
+	 * @param array $input Raw URL strategy input.
+	 * @return array Sanitized URL strategy settings.
+	 */
+	private function sanitizeUrlStrategy( array $input ): array {
+		$clean = array();
+
+		$clean['method'] = in_array(
+			$input['method'] ?? '',
+			array( 'directory', 'subdomain', 'domain', 'query_param' ),
+			true
+		) ? $input['method'] : 'directory';
+
+		$clean['hide_default'] = ! empty( $input['hide_default'] );
+
+		if ( isset( $input['domain_mapping'] ) && is_array( $input['domain_mapping'] ) ) {
+			foreach ( $input['domain_mapping'] as $code => $domain ) {
+				$clean['domain_mapping'][ sanitize_text_field( $code ) ] = sanitize_text_field( $domain );
+			}
+		}
+
+		return $clean;
+	}
+
+	/**
+	 * Sanitize browser redirect settings.
+	 *
+	 * @param array $input Raw browser redirect input.
+	 * @return array Sanitized browser redirect settings.
+	 */
+	private function sanitizeBrowserRedirect( array $input ): array {
+		return array(
+			'enabled' => ! empty( $input['enabled'] ),
+		);
+	}
+
+	/**
+	 * Sanitize API key settings.
+	 *
+	 * @param array $input Raw API input.
+	 * @return array Sanitized API settings.
+	 */
+	private function sanitizeApiKeys( array $input ): array {
+		$clean = array();
+
+		foreach ( array( 'deepl', 'google', 'openai' ) as $provider ) {
+			$key = $input[ $provider ]['key'] ?? '';
+			$clean[ $provider ]['key'] = sanitize_text_field( $key );
+		}
+
+		if ( isset( $input['default_provider'] ) ) {
+			$clean['default_provider'] = sanitize_text_field( $input['default_provider'] );
+		}
+
+		return $clean;
+	}
+
+	/**
+	 * Sanitize custom field translation modes.
+	 *
+	 * @param array $input Raw custom fields input.
+	 * @return array Sanitized custom field settings.
+	 */
+	private function sanitizeCustomFields( array $input ): array {
+		$clean = array();
+
+		if ( is_array( $input ) ) {
+			foreach ( $input as $field_key => $mode ) {
+				$clean[ sanitize_text_field( $field_key ) ] = in_array(
+					$mode,
+					array( 'copy', 'translate', 'ignore' ),
+					true
+				) ? $mode : 'copy';
+			}
+		}
+
+		return $clean;
+	}
+
+	/**
+	 * Sanitize post type settings.
+	 *
+	 * @param array $input Raw post types input.
+	 * @return array Sanitized post types.
+	 */
+	private function sanitizePostTypes( array $input ): array {
+		return is_array( $input ) ? array_map( 'sanitize_text_field', $input ) : array();
+	}
+
+	/**
+	 * Sanitize taxonomy settings.
+	 *
+	 * @param array $input Raw taxonomies input.
+	 * @return array Sanitized taxonomies.
+	 */
+	private function sanitizeTaxonomies( array $input ): array {
+		return is_array( $input ) ? array_map( 'sanitize_text_field', $input ) : array();
+	}
+
+	/**
+	 * Sanitize media settings.
+	 *
+	 * @param array $input Raw media input.
+	 * @return array Sanitized media settings.
+	 */
+	private function sanitizeMedia( array $input ): array {
+		return array(
+			'duplicate_on_upload' => ! empty( $input['duplicate_on_upload'] ),
+		);
+	}
+
+	/**
+	 * Sanitize WooCommerce multi-currency settings.
+	 *
+	 * @param array $input Raw WooCommerce input.
+	 * @return array Sanitized WooCommerce settings.
+	 */
+	private function sanitizeWooCommerce( array $input ): array {
+		$clean = array();
+
+		$clean['multi_currency']['enabled'] = ! empty( $input['multi_currency']['enabled'] );
+		$clean['multi_currency']['mode'] = in_array(
+			$input['multi_currency']['mode'] ?? 'by_language',
+			array( 'by_language', 'by_geolocation' ),
+			true
+		) ? $input['multi_currency']['mode'] : 'by_language';
+
+		if ( isset( $input['multi_currency']['rates'] ) && is_array( $input['multi_currency']['rates'] ) ) {
+			foreach ( $input['multi_currency']['rates'] as $currency => $rate ) {
+				$clean['multi_currency']['rates'][ sanitize_text_field( $currency ) ] = floatval( $rate );
+			}
+		}
+
+		return $clean;
 	}
 }

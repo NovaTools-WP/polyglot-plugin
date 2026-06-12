@@ -27,8 +27,26 @@ class ServiceProvider implements ServiceProviderInterface {
 	 * @return void
 	 */
 	public function register( Container $container ): void {
-		// ── Support services ────────────────────────────────────────
+		$this->registerSupportServices( $container );
+		$this->registerLanguageServices( $container );
+		$this->registerTranslationServices( $container );
+		$this->registerStringServices( $container );
+		$this->registerUrlServices( $container );
+		$this->registerFileTranslationServices( $container );
+		$this->registerLanguageSwitcherServices( $container );
+		$this->registerAdminServices( $container );
+		$this->registerWooCommerceServices( $container );
+		$this->registerRestControllers( $container );
+	}
 
+	// ── Domain-specific registration methods ─────────────────────────
+
+	/**
+	 * Register support infrastructure services.
+	 *
+	 * @param Container $container The DI container instance.
+	 */
+	private function registerSupportServices( Container $container ): void {
 		$container['hooks'] = static function ( Container $c ): HookManager {
 			return new HookManager();
 		};
@@ -40,10 +58,14 @@ class ServiceProvider implements ServiceProviderInterface {
 		$container['cache'] = static function ( Container $c ): Cache {
 			return new Cache();
 		};
+	}
 
-		// ── Core services (lazy — only instantiated when accessed) ──
-
-		// Language services.
+	/**
+	 * Register language management services.
+	 *
+	 * @param Container $container The DI container instance.
+	 */
+	private function registerLanguageServices( Container $container ): void {
 		$container['language.repository'] = static function ( Container $c ) {
 			return new \NovaTools\Polyglot\Language\LanguageRepository( $c['cache'] );
 		};
@@ -58,8 +80,14 @@ class ServiceProvider implements ServiceProviderInterface {
 		$container['locale.mapper'] = static function ( Container $c ) {
 			return new \NovaTools\Polyglot\Language\LocaleMapper( $c['cache'] );
 		};
+	}
 
-		// Translation services.
+	/**
+	 * Register translation services (content, post, term, custom field).
+	 *
+	 * @param Container $container The DI container instance.
+	 */
+	private function registerTranslationServices( Container $container ): void {
 		$container['translation.repository'] = static function ( Container $c ) {
 			return new \NovaTools\Polyglot\Translation\TranslationRepository( $c['cache'] );
 		};
@@ -73,7 +101,6 @@ class ServiceProvider implements ServiceProviderInterface {
 			);
 		};
 
-		// Post translation services.
 		$container['post.translator'] = static function ( Container $c ) {
 			return new \NovaTools\Polyglot\Translation\PostTranslation\PostTranslator(
 				$c['translation.repository']
@@ -94,7 +121,6 @@ class ServiceProvider implements ServiceProviderInterface {
 			);
 		};
 
-		// Term translation services.
 		$container['term.translator'] = static function ( Container $c ) {
 			return new \NovaTools\Polyglot\Translation\TermTranslation\TermTranslator(
 				$c['translation.repository']
@@ -107,14 +133,19 @@ class ServiceProvider implements ServiceProviderInterface {
 			);
 		};
 
-		// Custom field translation service.
 		$container['custom_field.translator'] = static function ( Container $c ) {
 			return new \NovaTools\Polyglot\Translation\CustomFieldTranslation\CustomFieldTranslator(
 				$c['options']
 			);
 		};
+	}
 
-		// String translation services.
+	/**
+	 * Register string translation services.
+	 *
+	 * @param Container $container The DI container instance.
+	 */
+	private function registerStringServices( Container $container ): void {
 		$container['string.repository'] = static function ( Container $c ) {
 			return new \NovaTools\Polyglot\String\StringRepository( $c['cache'] );
 		};
@@ -131,7 +162,30 @@ class ServiceProvider implements ServiceProviderInterface {
 			return $manager;
 		};
 
-		// URL routing services.
+		$container['gettext.override'] = static function ( Container $c ) {
+			return new \NovaTools\Polyglot\String\GettextOverride(
+				$c['string.repository']
+			);
+		};
+
+		$container['translation.memory'] = static function ( Container $c ) {
+			return new \NovaTools\Polyglot\String\TranslationMemory(
+				$c['cache'],
+				$c['string.repository']
+			);
+		};
+
+		$container['package.repository'] = static function ( Container $c ) {
+			return new \NovaTools\Polyglot\String\Package\PackageRepository( $c['cache'] );
+		};
+	}
+
+	/**
+	 * Register URL routing services.
+	 *
+	 * @param Container $container The DI container instance.
+	 */
+	private function registerUrlServices( Container $container ): void {
 		$container['url.converter'] = static function ( Container $c ) {
 			return new \NovaTools\Polyglot\Url\UrlConverter(
 				$c['options'],
@@ -149,60 +203,14 @@ class ServiceProvider implements ServiceProviderInterface {
 				$c['url.converter']
 			);
 		};
+	}
 
-		// String translation services (extended).
-		$container['gettext.override'] = static function ( Container $c ) {
-			return new \NovaTools\Polyglot\String\GettextOverride(
-				$c['string.repository']
-			);
-		};
-
-		$container['translation.memory'] = static function ( Container $c ) {
-			return new \NovaTools\Polyglot\String\TranslationMemory(
-				$c['cache'],
-				$c['string.repository']
-			);
-		};
-
-		$container['package.repository'] = static function ( Container $c ) {
-			return new \NovaTools\Polyglot\String\Package\PackageRepository( $c['cache'] );
-		};
-
-		// Translation API services.
-		$container['provider.registry'] = static function ( Container $c ) {
-			return new \NovaTools\Polyglot\TranslationApi\ProviderRegistry( $c['hooks'], $c['options'] );
-		};
-
-		$container['auto.translator'] = static function ( Container $c ) {
-			return new \NovaTools\Polyglot\TranslationApi\AutoTranslator(
-				$c['provider.registry'],
-				$c['options']
-			);
-		};
-
-		// Media translation services.
-		$container['media.repository'] = static function ( Container $c ) {
-			return new \NovaTools\Polyglot\Media\MediaRepository( $c['cache'] );
-		};
-
-		$container['media.translator'] = static function ( Container $c ) {
-			return new \NovaTools\Polyglot\Media\MediaTranslator(
-				$c['media.repository'],
-				$c['translation.repository'],
-				$c['cache']
-			);
-		};
-
-		$container['media.sync'] = static function ( Container $c ) {
-			return new \NovaTools\Polyglot\Media\MediaSyncService(
-				$c['media.translator'],
-				$c['media.repository'],
-				$c['translation.repository'],
-				$c['cache']
-			);
-		};
-
-		// File translation services.
+	/**
+	 * Register file translation services (PO/MO, bundles, editor).
+	 *
+	 * @param Container $container The DI container instance.
+	 */
+	private function registerFileTranslationServices( Container $container ): void {
 		$container['po.parser'] = static function ( Container $c ) {
 			return new \NovaTools\Polyglot\FileTranslation\PoFileParser();
 		};
@@ -233,7 +241,25 @@ class ServiceProvider implements ServiceProviderInterface {
 			);
 		};
 
-		// Language switcher services.
+		$container['po.importer'] = static function ( Container $c ) {
+			return new \NovaTools\Polyglot\FileTranslation\PoImporter(
+				$c['po.parser']
+			);
+		};
+
+		$container['po.exporter'] = static function ( Container $c ) {
+			return new \NovaTools\Polyglot\FileTranslation\PoExporter(
+				$c['po.parser']
+			);
+		};
+	}
+
+	/**
+	 * Register language switcher services.
+	 *
+	 * @param Container $container The DI container instance.
+	 */
+	private function registerLanguageSwitcherServices( Container $container ): void {
 		$container['language_switcher'] = static function ( Container $c ) {
 			return new \NovaTools\Polyglot\LanguageSwitcher\LanguageSwitcher();
 		};
@@ -265,20 +291,14 @@ class ServiceProvider implements ServiceProviderInterface {
 		$container['switcher.block'] = static function ( Container $c ) {
 			return new \NovaTools\Polyglot\LanguageSwitcher\SwitcherBlock();
 		};
+	}
 
-		$container['po.importer'] = static function ( Container $c ) {
-			return new \NovaTools\Polyglot\FileTranslation\PoImporter(
-				$c['po.parser']
-			);
-		};
-
-		$container['po.exporter'] = static function ( Container $c ) {
-			return new \NovaTools\Polyglot\FileTranslation\PoExporter(
-				$c['po.parser']
-			);
-		};
-
-		// Admin services.
+	/**
+	 * Register admin UI services.
+	 *
+	 * @param Container $container The DI container instance.
+	 */
+	private function registerAdminServices( Container $container ): void {
 		$container['admin.menu_registrar'] = static function ( Container $c ) {
 			return new \NovaTools\Polyglot\Admin\MenuRegistrar(
 				\NovaTools\Polyglot\Core\Plugin::getInstance()
@@ -297,9 +317,14 @@ class ServiceProvider implements ServiceProviderInterface {
 				$c['language.repository']
 			);
 		};
+	}
 
-		// WooCommerce module (lazy — only resolved when WooCommerce is active,
-		// so zero WooCommerce code is loaded otherwise).
+	/**
+	 * Register WooCommerce integration services.
+	 *
+	 * @param Container $container The DI container instance.
+	 */
+	private function registerWooCommerceServices( Container $container ): void {
 		$container['woocommerce.product_data_override'] = static function ( Container $c ) {
 			return new \NovaTools\Polyglot\WooCommerce\ProductDataOverride(
 				$c['translation.repository']
@@ -378,18 +403,22 @@ class ServiceProvider implements ServiceProviderInterface {
 				$c['woocommerce.email_translator']
 			);
 		};
+	}
 
-
-		// WPML migration service.
+	/**
+	 * Register REST API controllers and related services.
+	 *
+	 * @param Container $container The DI container instance.
+	 */
+	private function registerRestControllers( Container $container ): void {
 		$container['wpml.migrator'] = static function ( Container $c ) {
 			return new \NovaTools\Polyglot\Database\Migration\MigrateFromWpml();
 		};
-		// REST API registrar.
+
 		$container['rest_api.registrar'] = static function ( Container $c ) {
 			return new \NovaTools\Polyglot\RestApi\RestApiRegistrar();
 		};
 
-		// Scan controller for string scanning endpoints.
 		$container['scan.controller'] = static function ( Container $c ) {
 			return new \NovaTools\Polyglot\RestApi\ScanController(
 				$c['string.extractor'],
@@ -400,7 +429,6 @@ class ServiceProvider implements ServiceProviderInterface {
 			);
 		};
 
-		// Auto-scanner for plugin/theme activation.
 		$container['auto.scanner'] = static function ( Container $c ) {
 			return new \NovaTools\Polyglot\String\AutoScanner(
 				$c['string.extractor'],
