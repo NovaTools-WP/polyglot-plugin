@@ -2,10 +2,13 @@
 /**
  * Plugin Name: NovaTools - Polyglot
  * Description: Comprehensive multilingual add-on for NovaTools — language management, content translation, string translation, PO/MO editing, WooCommerce multilingual, and WPML migration.
- * Author:
+ * Plugin URI: https://wordpress.org/plugins/novatools-polyglot/
+ * Author: Siim Liimand
  * Author URI:
- * License: GPLv2
+ * License: GPLv2 or later
  * Version: 1.0.0
+ * Requires at least: 6.0
+ * Requires PHP: 8.1
  * Text Domain: novatools-polyglot
  * Domain Path: /languages
  *
