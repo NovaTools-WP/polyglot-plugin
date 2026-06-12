@@ -22,10 +22,15 @@ $tables = array(
 	'polyglot_string_packages',
 );
 
+$table_names = array();
 foreach ( $tables as $table ) {
-	$table_name = $wpdb->prefix . $table;
+	$table_names[] = '`' . $wpdb->prefix . $table . '`';
+}
+
+if ( ! empty( $table_names ) ) {
+	$tables_sql = implode( ', ', $table_names );
 	// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-	$wpdb->query( "DROP TABLE IF EXISTS `{$table_name}`" );
+	$wpdb->query( "DROP TABLE IF EXISTS {$tables_sql}" );
 }
 
 // Remove main settings option.
