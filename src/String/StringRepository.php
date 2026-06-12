@@ -377,9 +377,7 @@ class StringRepository {
 		$result = array();
 
 		if ( is_array( $rows ) ) {
-			foreach ( $rows as $row ) {
-				$result[ $row['language'] ] = $row;
-			}
+			$result = array_column( $rows, null, 'language' );
 		}
 
 		$this->cache->set( $key, $result );

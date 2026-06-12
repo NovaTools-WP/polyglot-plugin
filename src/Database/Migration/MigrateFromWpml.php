@@ -1149,14 +1149,11 @@ class MigrateFromWpml {
 			ARRAY_A
 		);
 
-		$map = array();
-		if ( is_array( $rows ) ) {
-			foreach ( $rows as $row ) {
-				$map[ (int) $row['translation_id'] ] = $row;
-			}
+		if ( ! is_array( $rows ) ) {
+			return array();
 		}
 
-		return $map;
+		return array_column( $rows, null, 'translation_id' );
 	}
 
 	/**

@@ -131,11 +131,7 @@ class LocaleMapper {
 			ARRAY_A
 		);
 
-		$map = array();
-
-		foreach ( $rows as $row ) {
-			$map[ $row['locale'] ] = $row['code'];
-		}
+		$map = array_column( $rows, 'code', 'locale' );
 
 		$this->cache->set( $key, $map );
 
