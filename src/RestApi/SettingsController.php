@@ -68,6 +68,15 @@ class SettingsController {
 	 * @return WP_REST_Response|WP_Error
 	 */
 	public function updateItems( WP_REST_Request $request ) {
+		$nonce = $request->get_header( 'X-WP-Nonce' );
+		if ( ! wp_verify_nonce( $nonce, 'wp_rest' ) ) {
+			return new WP_Error(
+				'polyglot_invalid_nonce',
+				__( 'Invalid nonce.', 'novatools-polyglot' ),
+				array( 'status' => 403 )
+			);
+		}
+
 		$settings = $request->get_json_params();
 
 		if ( ! is_array( $settings ) ) {

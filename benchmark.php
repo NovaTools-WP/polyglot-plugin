@@ -1,4 +1,5 @@
 <?php
+defined('ABSPATH') || exit;
 
 $rows = [];
 for ($i = 0; $i < 10000; $i++) {

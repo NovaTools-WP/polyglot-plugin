@@ -188,6 +188,8 @@ class LanguageSwitcher {
 	 * @return string Translated URL.
 	 */
 	public function getTranslatedUrl( string $language_code ): string {
+		global $wp;
+
 		// On singular pages, try to link to the translated post.
 		if ( is_singular() ) {
 			$post_id  = get_the_ID();
@@ -221,11 +223,8 @@ class LanguageSwitcher {
 		}
 
 		// Fallback: convert the current URL to the target language.
-		$current_url = ( isset( $_SERVER['HTTPS'] ) && 'on' === $_SERVER['HTTPS'] ? 'https' : 'http' )
-			. '://' . ( $_SERVER['HTTP_HOST'] ?? '' )
-			. ( $_SERVER['REQUEST_URI'] ?? '/' );
+		$current_url = home_url( add_query_arg( [], $wp->request ?? '/' ) );
 
-		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- URL used for internal conversion only.
 		$converted = polyglot_url( esc_url_raw( $current_url ), $language_code );
 
 		if ( $converted && $converted !== $current_url ) {

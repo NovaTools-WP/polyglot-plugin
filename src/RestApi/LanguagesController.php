@@ -232,15 +232,21 @@ class LanguagesController {
 			$manager = $plugin->get( 'language.manager' );
 			$lang    = $manager->add( $data );
 		} catch ( \InvalidArgumentException $e ) {
+			if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+				error_log( '[Polyglot] Invalid language data: ' . $e->getMessage() );
+			}
 			return new WP_Error(
 				'polyglot_invalid_language_data',
-				$e->getMessage(),
+				__( 'Invalid language data provided. Please check your input and try again.', 'novatools-polyglot' ),
 				array( 'status' => 400 )
 			);
 		} catch ( \Throwable $e ) {
+			if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+				error_log( '[Polyglot] Language creation failed: ' . $e->getMessage() );
+			}
 			return new WP_Error(
 				'polyglot_language_create_failed',
-				$e->getMessage(),
+				__( 'An internal error occurred while creating the language. Please try again.', 'novatools-polyglot' ),
 				array( 'status' => 500 )
 			);
 		}

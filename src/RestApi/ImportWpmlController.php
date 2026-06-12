@@ -290,9 +290,12 @@ class ImportWpmlController {
 					);
 			}
 		} catch ( \Throwable $e ) {
+			if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+				error_log( '[Polyglot] Import error: ' . $e->getMessage() );
+			}
 			return new WP_Error(
 				'polyglot_import_error',
-				$e->getMessage(),
+				__( 'An internal error occurred during import. Please try again.', 'novatools-polyglot' ),
 				array( 'status' => 500 )
 			);
 		}

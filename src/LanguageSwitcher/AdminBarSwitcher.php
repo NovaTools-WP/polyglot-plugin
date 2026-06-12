@@ -80,6 +80,10 @@ class AdminBarSwitcher {
 	 * @return void
 	 */
 	public function handleLanguageSwitch(): void {
+		if ( ! current_user_can( 'edit_posts' ) ) {
+			return;
+		}
+
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		$code = isset( $_GET[ self::QUERY_PARAM ] ) ? sanitize_text_field( wp_unslash( $_GET[ self::QUERY_PARAM ] ) ) : '';
 
@@ -263,15 +267,13 @@ class AdminBarSwitcher {
 	 * @return string The switch URL.
 	 */
 	private function getSwitchUrl( string $code ): string {
-		global $pagenow;
+		global $pagenow, $wp;
 
 		// Build URL from the current request.
 		if ( is_admin() ) {
 			$url = admin_url( $pagenow );
 		} else {
-			$url = ( isset( $_SERVER['HTTPS'] ) && 'on' === $_SERVER['HTTPS'] ? 'https' : 'http' )
-				. '://' . ( $_SERVER['HTTP_HOST'] ?? '' )
-				. ( $_SERVER['REQUEST_URI'] ?? '/' );
+			$url = home_url( add_query_arg( [], $wp->request ?? '/' ) );
 		}
 
 		return add_query_arg( self::QUERY_PARAM, $code, $url );

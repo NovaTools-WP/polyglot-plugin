@@ -56,6 +56,7 @@ skip_filenames = {
     "composer.json",
     "composer.lock",
     "build-zip.sh",
+    "benchmark.php",
 }
 
 # Filename suffixes to skip

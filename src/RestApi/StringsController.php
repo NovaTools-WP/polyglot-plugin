@@ -223,9 +223,12 @@ class StringsController {
 		try {
 			$stringId = $manager->registerString( $domain, $name, $value, $context, $args );
 		} catch ( \Throwable $e ) {
+			if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+				error_log( '[Polyglot] String registration failed: ' . $e->getMessage() );
+			}
 			return new WP_Error(
 				'polyglot_string_register_failed',
-				$e->getMessage(),
+				__( 'An internal error occurred while registering the string. Please try again.', 'novatools-polyglot' ),
 				array( 'status' => 500 )
 			);
 		}
@@ -302,9 +305,12 @@ class StringsController {
 		try {
 			$translationId = $manager->saveTranslation( $stringId, $language, $value, $status );
 		} catch ( \Throwable $e ) {
+			if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+				error_log( '[Polyglot] Translation save failed: ' . $e->getMessage() );
+			}
 			return new WP_Error(
 				'polyglot_translation_save_failed',
-				$e->getMessage(),
+				__( 'An internal error occurred while saving the translation. Please try again.', 'novatools-polyglot' ),
 				array( 'status' => 500 )
 			);
 		}
