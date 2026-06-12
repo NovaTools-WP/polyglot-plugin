@@ -28,6 +28,14 @@ class Activator {
 	 * @return void
 	 */
 	public static function activate(): void {
+		if ( ! class_exists( 'NovaTools' ) ) {
+			wp_die(
+				esc_html__( 'NovaTools - Polyglot requires the NovaTools core plugin to be installed and active. Please activate NovaTools first.', 'novatools-polyglot' ),
+				esc_html__( 'Plugin Dependency Error', 'novatools-polyglot' ),
+				array( 'back_link' => true )
+			);
+		}
+
 		// Run version-based installer (schema, seeding, upgrades).
 		Installer::run();
 

@@ -11,6 +11,7 @@
  * Requires PHP: 8.1
  * Text Domain: novatools-polyglot
  * Domain Path: /languages
+ * Requires Plugins: novatools
  *
  * @package NovaTools\Polyglot
  */
@@ -72,3 +73,18 @@ function novatools_polyglot_init() {
 }
 
 add_action( 'plugins_loaded', 'novatools_polyglot_init', 1 );
+
+/**
+ * Add settings link to the plugin action links.
+ */
+add_filter( 'plugin_action_links_' . plugin_basename( __FILE__ ), 'novatools_polyglot_add_settings_link' );
+function novatools_polyglot_add_settings_link( $links ) {
+	$settings_link = sprintf(
+		'<a href="%s">%s</a>',
+		admin_url( 'admin.php?page=novatools#/polyglot' ),
+		esc_html__( 'Settings', 'novatools-polyglot' )
+	);
+	array_unshift( $links, $settings_link );
+	return $links;
+}
+
