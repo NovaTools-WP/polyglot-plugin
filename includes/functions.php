@@ -12,6 +12,35 @@
 
 defined( 'ABSPATH' ) || exit;
 
+// ── Internal Helpers ──────────────────────────────────────────────────────
+
+/**
+ * Resolve a service from the DI container and invoke a callback.
+ *
+ * Centralises the repeated try/catch + has()/get() pattern used by all
+ * public API functions. Returns $fallback when the service is missing
+ * or an exception is thrown.
+ *
+ * @since 1.0.0
+ *
+ * @param string   $service  Container service key (e.g. 'language.repository').
+ * @param callable $fn       Callback receiving the resolved service, returning the result.
+ * @param mixed    $fallback Value returned on miss or error.
+ * @return mixed
+ */
+function _polyglot_resolve( string $service, callable $fn, mixed $fallback ): mixed {
+	try {
+		$plugin = \NovaTools\Polyglot\Core\Plugin::getInstance();
+		if ( ! $plugin->has( $service ) ) {
+			return $fallback;
+		}
+		return $fn( $plugin->get( $service ) );
+	} catch ( \Throwable $e ) {
+		\NovaTools\Polyglot\Support\Logger::error( '_polyglot_resolve(' . $service . '): ' . $e->getMessage() );
+		return $fallback;
+	}
+}
+
 // ── Language Management API ───────────────────────────────────────────────
 
 /**
@@ -66,9 +95,9 @@ function polyglot_get_current_language(): string {
 					return $lang;
 				}
 			}
-		} catch ( \Throwable ) {
-			// Fall through to filter / default.
-		}
+	} catch ( \Throwable $e ) {
+		\NovaTools\Polyglot\Support\Logger::error( 'polyglot_get_current_language: ' . $e->getMessage() );
+	}
 
 		/**
 		 * Filters the current frontend language code.
@@ -111,21 +140,11 @@ function polyglot_set_current_language( ?string $code ): void {
  * @return string Default language code (e.g. "en").
  */
 function polyglot_get_default_language(): string {
-	try {
-		$plugin = \NovaTools\Polyglot\Core\Plugin::getInstance();
-
-		if ( ! $plugin->has( 'language.repository' ) ) {
-			return 'en';
-		}
-
-		/** @var \NovaTools\Polyglot\Language\LanguageRepository $repo */
-		$repo    = $plugin->get( 'language.repository' );
-		$default = $repo->getDefault();
-
-		return $default ? $default->code : 'en';
-	} catch ( \Throwable ) {
-		return 'en';
-	}
+	return _polyglot_resolve(
+		'language.repository',
+		fn( $repo ) => ( $default = $repo->getDefault() ) ? $default->code : 'en',
+		'en'
+	);
 }
 
 /**
@@ -135,20 +154,11 @@ function polyglot_get_default_language(): string {
  * @return \NovaTools\Polyglot\Language\Language[] Associative array keyed by language code.
  */
 function polyglot_get_active_languages(): array {
-	try {
-		$plugin = \NovaTools\Polyglot\Core\Plugin::getInstance();
-
-		if ( ! $plugin->has( 'language.repository' ) ) {
-			return array();
-		}
-
-		/** @var \NovaTools\Polyglot\Language\LanguageRepository $repo */
-		$repo = $plugin->get( 'language.repository' );
-
-		return $repo->getActive();
-	} catch ( \Throwable ) {
-		return array();
-	}
+	return _polyglot_resolve(
+		'language.repository',
+		fn( $repo ) => $repo->getActive(),
+		array()
+	);
 }
 
 /**
@@ -163,25 +173,17 @@ function polyglot_get_active_languages(): array {
  * @return string Language display name, or empty string if not found.
  */
 function polyglot_get_language_name( string $code, string $in_language = 'native' ): string {
-	try {
-		$plugin = \NovaTools\Polyglot\Core\Plugin::getInstance();
-
-		if ( ! $plugin->has( 'language.repository' ) ) {
-			return '';
-		}
-
-		/** @var \NovaTools\Polyglot\Language\LanguageRepository $repo */
-		$repo = $plugin->get( 'language.repository' );
-		$lang = $repo->getByCode( $code );
-
-		if ( ! $lang ) {
-			return '';
-		}
-
-		return ( 'en' === $in_language ) ? $lang->englishName : $lang->nativeName;
-	} catch ( \Throwable ) {
-		return '';
-	}
+	return _polyglot_resolve(
+		'language.repository',
+		function ( $repo ) use ( $code, $in_language ) {
+			$lang = $repo->getByCode( $code );
+			if ( ! $lang ) {
+				return '';
+			}
+			return ( 'en' === $in_language ) ? $lang->englishName : $lang->nativeName;
+		},
+		''
+	);
 }
 
 // ── URL Routing API ───────────────────────────────────────────────────────
@@ -203,20 +205,11 @@ if ( ! function_exists( 'polyglot_url' ) ) {
 	 * @return string The URL adjusted for the target language.
 	 */
 	function polyglot_url( string $url, ?string $language = null ): string {
-		try {
-			$plugin = \NovaTools\Polyglot\Core\Plugin::getInstance();
-
-			if ( ! $plugin->has( 'url.converter' ) ) {
-				return $url;
-			}
-
-			/** @var \NovaTools\Polyglot\Url\UrlConverter $converter */
-			$converter = $plugin->get( 'url.converter' );
-
-			return $converter->convert( $url, $language );
-		} catch ( \Throwable ) {
-			return $url;
-		}
+		return _polyglot_resolve(
+			'url.converter',
+			fn( $converter ) => $converter->convert( $url, $language ),
+			$url
+		);
 	}
 }
 
@@ -239,20 +232,11 @@ if ( ! function_exists( 'polyglot_home_url' ) ) {
 	 * @return string The home URL for the given language.
 	 */
 	function polyglot_home_url( ?string $language = null ): string {
-		try {
-			$plugin = \NovaTools\Polyglot\Core\Plugin::getInstance();
-
-			if ( ! $plugin->has( 'url.converter' ) ) {
-				return home_url( '/' );
-			}
-
-			/** @var \NovaTools\Polyglot\Url\UrlConverter $converter */
-			$converter = $plugin->get( 'url.converter' );
-
-			return $converter->getHomeUrl( $language );
-		} catch ( \Throwable ) {
-			return home_url( '/' );
-		}
+		return _polyglot_resolve(
+			'url.converter',
+			fn( $converter ) => $converter->getHomeUrl( $language ),
+			home_url( '/' )
+		);
 	}
 }
 
@@ -294,20 +278,11 @@ if ( ! function_exists( 'polyglot_register_string' ) ) {
 		string $context = '',
 		array $args = array()
 	): int {
-		try {
-			$plugin = \NovaTools\Polyglot\Core\Plugin::getInstance();
-
-			if ( ! $plugin->has( 'string.manager' ) ) {
-				return 0;
-			}
-
-			/** @var \NovaTools\Polyglot\String\StringManager $manager */
-			$manager = $plugin->get( 'string.manager' );
-
-			return $manager->registerString( $domain, $name, $value, $context, $args );
-		} catch ( \Throwable ) {
-			return 0;
-		}
+		return _polyglot_resolve(
+			'string.manager',
+			fn( $manager ) => $manager->registerString( $domain, $name, $value, $context, $args ),
+			0
+		);
 	}
 }
 
@@ -332,24 +307,15 @@ if ( ! function_exists( 'polyglot_translate_string' ) ) {
 	 * @return string Translated value, or original value as fallback. Empty string on error.
 	 */
 	function polyglot_translate_string( string $domain, string $name, string $language = '', string $context = '' ): string {
-		try {
-			if ( '' === $language ) {
-				$language = polyglot_get_current_language();
-			}
-
-			$plugin = \NovaTools\Polyglot\Core\Plugin::getInstance();
-
-			if ( ! $plugin->has( 'string.manager' ) ) {
-				return '';
-			}
-
-			/** @var \NovaTools\Polyglot\String\StringManager $manager */
-			$manager = $plugin->get( 'string.manager' );
-
-			return $manager->translateString( $domain, $name, $language, $context );
-		} catch ( \Throwable ) {
-			return '';
+		if ( '' === $language ) {
+			$language = polyglot_get_current_language();
 		}
+
+		return _polyglot_resolve(
+			'string.manager',
+			fn( $manager ) => $manager->translateString( $domain, $name, $language, $context ),
+			''
+		);
 	}
 }
 
@@ -373,27 +339,17 @@ if ( ! function_exists( 'polyglot_t' ) ) {
 	 * @return string Translated value for the current language, or the default value.
 	 */
 	function polyglot_t( string $domain, string $name, string $default ): string {
-		try {
-			$language = polyglot_get_current_language();
-			$plugin   = \NovaTools\Polyglot\Core\Plugin::getInstance();
+		$language = polyglot_get_current_language();
 
-			if ( ! $plugin->has( 'string.manager' ) ) {
-				return $default;
-			}
-
-			/** @var \NovaTools\Polyglot\String\StringManager $manager */
-			$manager = $plugin->get( 'string.manager' );
-
-			// Register the string (updates if already exists).
-			$manager->registerString( $domain, $name, $default );
-
-			// Return the translation for the current language.
-			$translated = $manager->translateString( $domain, $name, $language );
-
-			return '' !== $translated ? $translated : $default;
-		} catch ( \Throwable ) {
-			return $default;
-		}
+		return _polyglot_resolve(
+			'string.manager',
+			function ( $manager ) use ( $domain, $name, $default, $language ) {
+				$manager->registerString( $domain, $name, $default );
+				$translated = $manager->translateString( $domain, $name, $language );
+				return '' !== $translated ? $translated : $default;
+			},
+			$default
+		);
 	}
 }
 
@@ -420,24 +376,15 @@ if ( ! function_exists( 'polyglot_translate_object' ) ) {
 	 * @return int|null Translated element ID, or null if not found.
 	 */
 	function polyglot_translate_object( int $id, string $type, ?string $language = null ): ?int {
-		try {
-			if ( null === $language ) {
-				$language = polyglot_get_current_language();
-			}
-
-			$plugin = \NovaTools\Polyglot\Core\Plugin::getInstance();
-
-			if ( ! $plugin->has( 'content.translator' ) ) {
-				return null;
-			}
-
-			/** @var \NovaTools\Polyglot\Translation\ContentTranslator $translator */
-			$translator = $plugin->get( 'content.translator' );
-
-			return $translator->getTranslatedId( $id, $type, $language );
-		} catch ( \Throwable ) {
-			return null;
+		if ( null === $language ) {
+			$language = polyglot_get_current_language();
 		}
+
+		return _polyglot_resolve(
+			'content.translator',
+			fn( $translator ) => $translator->getTranslatedId( $id, $type, $language ),
+			null
+		);
 	}
 }
 
@@ -460,20 +407,11 @@ if ( ! function_exists( 'polyglot_get_object_language' ) ) {
 	 * @return string|null Language code, or null if the element has no translation row.
 	 */
 	function polyglot_get_object_language( int $id, string $type ): ?string {
-		try {
-			$plugin = \NovaTools\Polyglot\Core\Plugin::getInstance();
-
-			if ( ! $plugin->has( 'content.translator' ) ) {
-				return null;
-			}
-
-			/** @var \NovaTools\Polyglot\Translation\ContentTranslator $translator */
-			$translator = $plugin->get( 'content.translator' );
-
-			return $translator->getElementLanguage( $id, $type );
-		} catch ( \Throwable ) {
-			return null;
-		}
+		return _polyglot_resolve(
+			'content.translator',
+			fn( $translator ) => $translator->getElementLanguage( $id, $type ),
+			null
+		);
 	}
 }
 
@@ -499,19 +437,10 @@ if ( ! function_exists( 'polyglot_get_translation_group' ) ) {
 	 * @return \NovaTools\Polyglot\Translation\TranslationGroup|null The group, or null.
 	 */
 	function polyglot_get_translation_group( int $id, string $type ): ?\NovaTools\Polyglot\Translation\TranslationGroup {
-		try {
-			$plugin = \NovaTools\Polyglot\Core\Plugin::getInstance();
-
-			if ( ! $plugin->has( 'content.translator' ) ) {
-				return null;
-			}
-
-			/** @var \NovaTools\Polyglot\Translation\ContentTranslator $translator */
-			$translator = $plugin->get( 'content.translator' );
-
-			return $translator->getTranslationGroup( $id, $type );
-		} catch ( \Throwable ) {
-			return null;
-		}
+		return _polyglot_resolve(
+			'content.translator',
+			fn( $translator ) => $translator->getTranslationGroup( $id, $type ),
+			null
+		);
 	}
 }

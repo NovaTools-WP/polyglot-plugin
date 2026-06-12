@@ -14,11 +14,33 @@
 namespace NovaTools\Polyglot\String;
 
 use NovaTools\Polyglot\Support\Cache;
+use NovaTools\Polyglot\Support\Logger;
 use NovaTools\Polyglot\String\Package\PackageRepository;
 
 defined( 'ABSPATH' ) || exit;
 
 class StringManager {
+
+	/**
+	 * Translation status: untranslated.
+	 *
+	 * @var int
+	 */
+	const STATUS_UNTRANSLATED = 0;
+
+	/**
+	 * Translation status: translated.
+	 *
+	 * @var int
+	 */
+	const STATUS_TRANSLATED = 1;
+
+	/**
+	 * Translation status: needs update (source string changed).
+	 *
+	 * @var int
+	 */
+	const STATUS_NEEDS_UPDATE = 2;
 
 	/**
 	 * String repository (read/write access).
@@ -215,8 +237,7 @@ class StringManager {
 		$translation = $this->repository->getTranslation( (int) $string['id'], $language );
 
 		// Return the translated value only if the translation is complete.
-		// Status codes: 0 = not translated, 1 = translated, 2 = needs_update.
-		if ( $translation && 1 === (int) $translation['status'] && null !== $translation['value'] ) {
+		if ( $translation && self::STATUS_TRANSLATED === (int) $translation['status'] && null !== $translation['value'] ) {
 			return $translation['value'];
 		}
 
@@ -247,14 +268,14 @@ class StringManager {
 	 * @param int    $string_id The string ID.
 	 * @param string $language  Target language code.
 	 * @param string $value     The translated value.
-	 * @param int    $status    Translation status. Default 1 (translated).
+	 * @param int    $status    Translation status. Default self::STATUS_TRANSLATED.
 	 * @return int The translation row ID.
 	 */
 	public function saveTranslation(
 		int $string_id,
 		string $language,
 		string $value,
-		int $status = 1
+		int $status = self::STATUS_TRANSLATED
 	): int {
 		$data = array(
 			'string_id'   => $string_id,
@@ -320,14 +341,13 @@ class StringManager {
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
 		$result = $wpdb->update(
 			$table,
-			array( 'status' => 2 ), // 2 = needs_update.
+			array( 'status' => self::STATUS_NEEDS_UPDATE ),
 			array( 'string_id' => $string_id )
 		);
 
 		if ( false === $result ) {
-			// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
-			error_log( sprintf(
-				'[Polyglot] Failed to flag translations as needs_update for string %d: %s',
+			Logger::error( sprintf(
+				'Failed to flag translations as needs_update for string %d: %s',
 				$string_id,
 				$wpdb->last_error
 			) );

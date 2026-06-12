@@ -13,11 +13,13 @@
 namespace NovaTools\Polyglot\Core;
 
 use NovaTools\Polyglot\Database\Schema;
-use NovaTools\Polyglot\Support\Cache;
+use NovaTools\Polyglot\Traits\FlushesCache;
 
 defined( 'ABSPATH' ) || exit;
 
 class Installer {
+
+	use FlushesCache;
 
 	/**
 	 * WordPress option key used to track the installed database version.
@@ -116,13 +118,4 @@ class Installer {
 		do_action( 'polyglot_upgraded', $from, $to );
 	}
 
-	/**
-	 * Flush all Polyglot object-cache entries.
-	 *
-	 * @return void
-	 */
-	private static function flushCache(): void {
-		$cache = new Cache();
-		$cache->flushGroup();
-	}
 }

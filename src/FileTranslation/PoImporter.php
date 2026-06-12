@@ -13,6 +13,7 @@
 namespace NovaTools\Polyglot\FileTranslation;
 
 use NovaTools\Polyglot\Database\Schema;
+use NovaTools\Polyglot\String\StringManager;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -137,7 +138,7 @@ class PoImporter {
 						'value'   => $msgid,
 						'hash'    => $hash,
 						'type'    => 'LINE',
-						'status'  => 0,
+						'status'  => StringManager::STATUS_UNTRANSLATED,
 					),
 					array( '%s', '%s', '%s', '%s', '%s', '%s', '%d' )
 				);
@@ -172,8 +173,7 @@ class PoImporter {
 				continue;
 			}
 
-			// Translation status: 1 = completed.
-			$status = 1;
+			$status = StringManager::STATUS_TRANSLATED;
 
 			// Check if translation already exists for this string + language.
 			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery

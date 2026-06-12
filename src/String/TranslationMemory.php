@@ -88,8 +88,8 @@ class TranslationMemory {
 		// Build the memory entry.
 		$lang_map = array();
 		foreach ( $translations as $lang => $row ) {
-			// Only store completed translations (status = 1).
-			if ( 1 === (int) $row['status'] && null !== $row['value'] ) {
+			// Only store completed translations.
+			if ( StringManager::STATUS_TRANSLATED === (int) $row['status'] && null !== $row['value'] ) {
 				$lang_map[ $lang ] = $row['value'];
 			}
 		}

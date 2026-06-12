@@ -11,11 +11,13 @@
 
 namespace NovaTools\Polyglot\Core;
 
-use NovaTools\Polyglot\Support\Cache;
+use NovaTools\Polyglot\Traits\FlushesCache;
 
 defined( 'ABSPATH' ) || exit;
 
 class Deactivator {
+
+	use FlushesCache;
 
 	/**
 	 * Cron hook names managed by the Polyglot plugin.
@@ -49,16 +51,6 @@ class Deactivator {
 		 * Fires after the Polyglot plugin has been deactivated.
 		 */
 		do_action( 'polyglot_deactivated' );
-	}
-
-	/**
-	 * Flush all Polyglot object-cache entries.
-	 *
-	 * @return void
-	 */
-	private static function flushCache(): void {
-		$cache = new Cache();
-		$cache->flushGroup();
 	}
 
 	/**

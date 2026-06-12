@@ -8,11 +8,13 @@ dist-ssr/
 release/
 assets/admin/dist/
 
-# Lock files (regenerate with npm install / composer install)
-package-lock.json
-pnpm-lock.yaml
-yarn.lock
-composer.lock
+# Build & dev tooling (should not ship)
+build-zip.sh
+benchmark.php
+improvement-ideas/
+
+# Archives
+*.zip
 
 # Logs
 *.log

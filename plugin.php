@@ -67,8 +67,6 @@ final class NovaToolsPolyglot {
 	public function init() {
 		$this->init_container();
 		$this->init_hooks();
-
-		add_action( 'init', array( $this, 'load_textdomain' ) );
 	}
 
 	/**
@@ -220,17 +218,4 @@ final class NovaToolsPolyglot {
 		return $pages;
 	}
 
-	/**
-	 * Load plugin text domain for translations.
-	 *
-	 * @since 1.0.0
-	 * @return void
-	 */
-	public function load_textdomain() {
-		load_plugin_textdomain(
-			'novatools-polyglot',
-			false,
-			dirname( plugin_basename( __FILE__ ) ) . '/languages/'
-		);
-	}
 }

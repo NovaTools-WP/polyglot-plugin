@@ -13,6 +13,7 @@ namespace NovaTools\Polyglot\Core;
 
 use Pimple\Container;
 use NovaTools\Polyglot\Compatibility\DependencyCheck;
+use NovaTools\Polyglot\Support\Logger;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -245,8 +246,9 @@ class Plugin {
 			if ( $module instanceof ModuleInterface && $module->isActive() ) {
 				$module->register();
 			}
-		} catch ( \Throwable ) {
-			// A module must never break the site. Fail silently.
+		} catch ( \Throwable $e ) {
+			// A module must never break the site. Log but continue.
+			Logger::error( 'WooCommerce module init failed: ' . $e->getMessage() );
 		}
 	}
 
@@ -267,7 +269,8 @@ class Plugin {
 			$active  = $repo->getActive();
 
 			return array_keys( $active );
-		} catch ( \Throwable ) {
+		} catch ( \Throwable $e ) {
+			Logger::error( 'filterActiveLanguageCodes: ' . $e->getMessage() );
 			return $codes;
 		}
 	}

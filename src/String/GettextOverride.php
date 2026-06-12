@@ -185,10 +185,10 @@ class GettextOverride {
 			$current_lang
 		);
 
-		// Only return DB translation when it's complete (status = 1).
+		// Only return DB translation when it's complete.
 		if (
 			$translation_row
-			&& 1 === (int) $translation_row['status']
+			&& StringManager::STATUS_TRANSLATED === (int) $translation_row['status']
 			&& null !== $translation_row['value']
 		) {
 			return $translation_row['value'];

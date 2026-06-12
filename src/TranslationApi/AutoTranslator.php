@@ -11,7 +11,10 @@
 
 namespace NovaTools\Polyglot\TranslationApi;
 
+use NovaTools\Polyglot\Database\Schema;
+use NovaTools\Polyglot\Support\Logger;
 use NovaTools\Polyglot\Support\OptionStore;
+use NovaTools\Polyglot\String\StringManager;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -47,6 +50,13 @@ class AutoTranslator {
 	 * @var int
 	 */
 	const STRINGS_PER_BATCH = 25;
+
+	/**
+	 * Maximum number of untranslated strings to fetch per language.
+	 *
+	 * @var int
+	 */
+	const MAX_UNTRANSLATED_STRINGS = 5000;
 
 	/**
 	 * Provider registry for looking up translation providers.
@@ -246,8 +256,8 @@ class AutoTranslator {
 
 		// Log the final failure for debugging.
 		if ( $lastException ) {
-			error_log( sprintf(
-				'[Polyglot] Auto-translation failed after %d attempts for provider "%s": %s',
+			Logger::error( sprintf(
+				'Auto-translation failed after %d attempts for provider "%s": %s',
 				self::MAX_RETRIES,
 				$provider->getId(),
 				$lastException->getMessage()
@@ -261,7 +271,7 @@ class AutoTranslator {
 	 * Save a translated string to the database.
 	 *
 	 * Records the provider identifier in the `provider` column
-	 * and sets the status to translated (1).
+	 * and sets the status to translated.
 	 *
 	 * @param int    $stringId   Source string ID.
 	 * @param string $language   Target language code.
@@ -272,7 +282,7 @@ class AutoTranslator {
 	private function saveTranslation( int $stringId, string $language, string $value, string $providerId ): bool {
 		global $wpdb;
 
-		$table = $wpdb->prefix . 'polyglot_string_translations';
+		$table = Schema::getTableName( 'polyglot_string_translations' );
 
 		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Direct insert for batch performance.
 
@@ -281,7 +291,7 @@ class AutoTranslator {
 			array(
 				'string_id'          => $stringId,
 				'language'           => $language,
-				'status'             => 1,  // Translated.
+				'status'             => StringManager::STATUS_TRANSLATED,
 				'value'              => $value,
 				'translator_id'      => get_current_user_id() ?: null,
 				'translation_service'  => $providerId,
@@ -297,7 +307,7 @@ class AutoTranslator {
 			$updated = $wpdb->update(
 				$table,
 				array(
-					'status'              => 1,
+					'status'              => StringManager::STATUS_TRANSLATED,
 					'value'               => $value,
 					'translation_service'  => $providerId,
 					'translated_at'       => current_time( 'mysql' ),
@@ -328,8 +338,8 @@ class AutoTranslator {
 	private function getUntranslatedStrings( string $language ): array {
 		global $wpdb;
 
-		$strings_table    = $wpdb->prefix . 'polyglot_strings';
-		$translations_table = $wpdb->prefix . 'polyglot_string_translations';
+		$strings_table    = Schema::getTableName( 'polyglot_strings' );
+		$translations_table = Schema::getTableName( 'polyglot_string_translations' );
 
 		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Batch query for auto-translation.
 
@@ -338,11 +348,13 @@ class AutoTranslator {
 				"SELECT s.id, s.value
 				 FROM {$strings_table} s
 				 LEFT JOIN {$translations_table} st
-				     ON st.string_id = s.id AND st.language = %s AND st.status = 1
+				     ON st.string_id = s.id AND st.language = %s AND st.status = %d
 				 WHERE st.id IS NULL
 				 ORDER BY s.id
-				 LIMIT 5000",
-				$language
+				 LIMIT %d",
+				$language,
+				StringManager::STATUS_TRANSLATED,
+				self::MAX_UNTRANSLATED_STRINGS
 			),
 			ARRAY_A
 		);
@@ -361,7 +373,7 @@ class AutoTranslator {
 	private function loadStringsByIds( array $stringIds ): array {
 		global $wpdb;
 
-		$table   = $wpdb->prefix . 'polyglot_strings';
+		$table   = Schema::getTableName( 'polyglot_strings' );
 		$ids     = array_map( 'absint', $stringIds );
 		$placeholders = implode( ',', array_fill( 0, count( $ids ), '%d' ) );
 
