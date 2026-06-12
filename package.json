@@ -1,0 +1,21 @@
+{
+  "name": "novatools-polyglot",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite -c vite.admin.config.js --port 5176",
+    "build": "vite build -c vite.admin.config.js",
+    "preview": "vite preview",
+    "format:check": "prettier --check .",
+    "format:fix": "prettier --write ."
+  },
+  "devDependencies": {
+    "@kucrut/vite-for-wp": "^0.7.0",
+    "@vitejs/plugin-react": "^4.1.0",
+    "vite": "^4.5.0"
+  },
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "name": "novatools/novatools-polyglot",
+  "description": "Comprehensive multilingual add-on for NovaTools — language management, content translation, string translation, PO/MO editing, WooCommerce multilingual, and WPML migration.",
+  "type": "wordpress-plugin",
+  "license": "GPL-2.0-or-later",
+  "require": {
+    "php": ">=8.1",
+    "pimple/pimple": "^3.5"
+  },
+  "autoload": {
+    "psr-4": {
+      "NovaTools\\Polyglot\\": "src/"
+    }
+  },
+  "_comment_autoload": "The autoload config is used during development (composer dump-autoload). In production, the custom PSR-4 autoloader in vendor/autoload.php is used instead to avoid requiring composer install on deploy.",
+  "config": {
+    "sort-packages": true,
+    "allow-plugins": {},
+    "optimize-autoloader": true
+  }
+}
