@@ -6,16 +6,18 @@ import Translations from "./components/Translations";
 import StringTranslation from "./components/StringTranslation";
 import Scan from "./components/Scan";
 import Settings from "./components/Settings";
+import ImportWpml from "./components/ImportWpml";
 
 // Register components on the global NovaTools addon registry.
 window.NovaToolsAddons = window.NovaToolsAddons || {};
 window.NovaToolsAddons["novatools-polyglot"] = {
-	PolyglotDashboard: Dashboard,
-	Languages,
-	Translations,
-	StringTranslation,
-	Scan,
-	PolyglotSettings: Settings,
+  PolyglotDashboard: Dashboard,
+  Languages,
+  Translations,
+  StringTranslation,
+  Scan,
+  PolyglotSettings: Settings,
+  ImportWpml,
 };
 
 console.log("[Polyglot Addon] Registered components on NovaToolsAddons");
