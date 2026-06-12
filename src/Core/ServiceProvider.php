@@ -138,6 +138,13 @@ class ServiceProvider implements ServiceProviderInterface {
 				$c['options']
 			);
 		};
+
+		$container['frontend.query_filter'] = static function ( Container $c ) {
+			return new \NovaTools\Polyglot\Translation\PostTranslation\FrontendQueryFilter(
+				$c['language.repository'],
+				$c['translation.repository']
+			);
+		};
 	}
 
 	/**

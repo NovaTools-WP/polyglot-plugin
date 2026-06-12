@@ -192,14 +192,19 @@ class LanguageSwitcher {
 
 		// On singular pages, try to link to the translated post.
 		if ( is_singular() ) {
-			$post_id  = get_the_ID();
-			$translated = polyglot_translate_object( $post_id, 'post_post', $language_code );
+			$post_id   = get_the_ID();
+			$post_type = get_post_type( $post_id );
 
-			if ( $translated ) {
-				$permalink = get_permalink( $translated );
+			if ( $post_type ) {
+				$element_type = 'post_' . $post_type;
+				$translated   = polyglot_translate_object( $post_id, $element_type, $language_code );
 
-				if ( $permalink ) {
-					return $permalink;
+				if ( $translated ) {
+					$permalink = get_permalink( $translated );
+
+					if ( $permalink ) {
+						return polyglot_url( $permalink, $language_code );
+					}
 				}
 			}
 		}
@@ -216,7 +221,7 @@ class LanguageSwitcher {
 					$link = get_term_link( $translated, $term->taxonomy );
 
 					if ( ! is_wp_error( $link ) ) {
-						return $link;
+						return polyglot_url( $link, $language_code );
 					}
 				}
 			}

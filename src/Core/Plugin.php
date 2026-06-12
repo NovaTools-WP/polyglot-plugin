@@ -205,6 +205,10 @@ class Plugin {
 		if ( $this->has( 'switcher.admin_bar' ) ) {
 			$this->get( 'switcher.admin_bar' )->register();
 		}
+
+		if ( $this->has( 'frontend.query_filter' ) ) {
+			$this->get( 'frontend.query_filter' )->register();
+		}
 	}
 
 	/**
