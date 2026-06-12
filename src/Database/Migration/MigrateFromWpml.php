@@ -1035,14 +1035,7 @@ class MigrateFromWpml {
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$rows = $wpdb->get_results( "SELECT code, locale FROM {$table}", ARRAY_A );
 
-		$map = array();
-		if ( is_array( $rows ) ) {
-			foreach ( $rows as $row ) {
-				$map[ $row['code'] ] = $row['locale'];
-			}
-		}
-
-		return $map;
+		return is_array( $rows ) ? array_column( $rows, 'locale', 'code' ) : array();
 	}
 
 	/**
@@ -1070,14 +1063,7 @@ class MigrateFromWpml {
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$rows = $wpdb->get_results( "SELECT lang_code, flag_url FROM {$table}", ARRAY_A );
 
-		$map = array();
-		if ( is_array( $rows ) ) {
-			foreach ( $rows as $row ) {
-				$map[ $row['lang_code'] ] = $row['flag_url'];
-			}
-		}
-
-		return $map;
+		return is_array( $rows ) ? array_column( $rows, 'flag_url', 'lang_code' ) : array();
 	}
 
 	/**
