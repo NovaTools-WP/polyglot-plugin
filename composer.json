@@ -12,7 +12,6 @@
       "NovaTools\\Polyglot\\": "src/"
     }
   },
-  "_comment_autoload": "The autoload config is used during development (composer dump-autoload). In production, the custom PSR-4 autoloader in vendor/autoload.php is used instead to avoid requiring composer install on deploy.",
   "config": {
     "sort-packages": true,
     "allow-plugins": {},

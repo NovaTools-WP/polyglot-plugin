@@ -1,0 +1,1640 @@
+# Copyright (C) 2026 Siim Liimand
+# This file is distributed under the GPLv2 or later.
+msgid ""
+msgstr ""
+"Project-Id-Version: NovaTools - Polyglot 1.0.0\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/app\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2026-06-12T08:51:27+00:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: WP-CLI 2.12.0\n"
+"X-Domain: novatools-polyglot\n"
+
+#. Plugin Name of the plugin
+#: novatools-polyglot.php
+msgid "NovaTools - Polyglot"
+msgstr ""
+
+#. Plugin URI of the plugin
+#: novatools-polyglot.php
+msgid "https://wordpress.org/plugins/novatools-polyglot/"
+msgstr ""
+
+#. Description of the plugin
+#: novatools-polyglot.php
+msgid "Comprehensive multilingual add-on for NovaTools — language management, content translation, string translation, PO/MO editing, WooCommerce multilingual, and WPML migration."
+msgstr ""
+
+#. Author of the plugin
+#: novatools-polyglot.php
+msgid "Siim Liimand"
+msgstr ""
+
+#: plugin.php:168
+#: plugin.php:212
+#: plugin.php:213
+#: src/Admin/MenuRegistrar.php:77
+#: src/Admin/MenuRegistrar.php:78
+msgid "Polyglot"
+msgstr ""
+
+#: src/Admin/DashboardPage.php:46
+#: src/Admin/ImportWpmlPage.php:95
+#: src/Admin/LanguageSettingsPage.php:114
+#: src/Admin/SettingsPage.php:81
+#: src/Admin/ThemePluginPage.php:44
+#: src/Admin/TranslationEditorPage.php:48
+msgid "You do not have permission to access this page."
+msgstr ""
+
+#: src/Admin/DashboardPage.php:181
+msgid "Polyglot Dashboard"
+msgstr ""
+
+#: src/Admin/DashboardPage.php:182
+msgid "Translation status overview for your multilingual site."
+msgstr ""
+
+#: src/Admin/DashboardPage.php:211
+msgid "Active Languages"
+msgstr ""
+
+#: src/Admin/DashboardPage.php:217
+msgid "Content Translated"
+msgstr ""
+
+#: src/Admin/DashboardPage.php:224
+msgid "Strings Translated"
+msgstr ""
+
+#: src/Admin/DashboardPage.php:232
+msgid "Translation APIs"
+msgstr ""
+
+#: src/Admin/DashboardPage.php:290
+msgid "Language Status"
+msgstr ""
+
+#: src/Admin/DashboardPage.php:294
+#: src/Admin/LanguageSettingsPage.php:198
+#: src/Admin/ThemePluginPage.php:198
+msgid "Language"
+msgstr ""
+
+#: src/Admin/DashboardPage.php:295
+msgid "Content"
+msgstr ""
+
+#: src/Admin/DashboardPage.php:296
+#: src/Admin/ImportWpmlPage.php:767
+msgid "Strings"
+msgstr ""
+
+#: src/Admin/DashboardPage.php:297
+msgid "Needs Update"
+msgstr ""
+
+#: src/Admin/DashboardPage.php:298
+msgid "Overall"
+msgstr ""
+
+#: src/Admin/DashboardPage.php:311
+#: src/Admin/LanguageSettingsPage.php:237
+msgid "Default language"
+msgstr ""
+
+#: src/Admin/DashboardPage.php:318
+#: src/Admin/DashboardPage.php:326
+msgid "Source language"
+msgstr ""
+
+#: src/Admin/DashboardPage.php:358
+msgid "No languages configured yet."
+msgstr ""
+
+#: src/Admin/ImportWpmlPage.php:133
+msgid "Detect WPML"
+msgstr ""
+
+#: src/Admin/ImportWpmlPage.php:134
+msgid "Select Data"
+msgstr ""
+
+#: src/Admin/ImportWpmlPage.php:135
+msgid "Preview"
+msgstr ""
+
+#: src/Admin/ImportWpmlPage.php:136
+msgid "Import"
+msgstr ""
+
+#: src/Admin/ImportWpmlPage.php:137
+msgid "Complete"
+msgstr ""
+
+#: src/Admin/ImportWpmlPage.php:174
+msgid "No WPML tables found in the database. Make sure WPML is (or was) installed before importing."
+msgstr ""
+
+#: src/Admin/ImportWpmlPage.php:178
+msgid "WPML data detected! The following tables were found:"
+msgstr ""
+
+#: src/Admin/ImportWpmlPage.php:182
+#: src/Admin/ImportWpmlPage.php:508
+msgid "Table"
+msgstr ""
+
+#: src/Admin/ImportWpmlPage.php:183
+#: src/Admin/ImportWpmlPage.php:509
+msgid "Rows"
+msgstr ""
+
+#: src/Admin/ImportWpmlPage.php:199
+msgid "WPML is currently active. You can keep it running during import — WPML tables are read-only during the process."
+msgstr ""
+
+#: src/Admin/ImportWpmlPage.php:205
+msgid "Continue to Data Selection"
+msgstr ""
+
+#: src/Admin/ImportWpmlPage.php:222
+msgid "No WPML tables detected. Please go back to step 1."
+msgstr ""
+
+#: src/Admin/ImportWpmlPage.php:227
+msgid "Choose which data to import from WPML. Unchecked items will be skipped."
+msgstr ""
+
+#: src/Admin/ImportWpmlPage.php:238
+#: src/Admin/ImportWpmlPage.php:749
+#: src/Admin/LanguageSettingsPage.php:194
+#: src/Admin/MenuRegistrar.php:97
+#: src/Admin/MenuRegistrar.php:98
+#: src/Admin/ThemePluginPage.php:119
+msgid "Languages"
+msgstr ""
+
+#: src/Admin/ImportWpmlPage.php:239
+msgid "Import language definitions, flags, and locale mappings from icl_languages / icl_languages_translations."
+msgstr ""
+
+#: src/Admin/ImportWpmlPage.php:245
+#: src/Admin/ImportWpmlPage.php:758
+#: src/Admin/TranslationEditorPage.php:396
+msgid "Content Translations"
+msgstr ""
+
+#: src/Admin/ImportWpmlPage.php:246
+msgid "Import post, page, taxonomy term, and custom post type translation relationships from icl_translations."
+msgstr ""
+
+#: src/Admin/ImportWpmlPage.php:252
+#: src/Admin/ImportWpmlPage.php:774
+msgid "String Translations"
+msgstr ""
+
+#: src/Admin/ImportWpmlPage.php:253
+msgid "Import registered strings and their translations from icl_strings / icl_string_translations."
+msgstr ""
+
+#: src/Admin/ImportWpmlPage.php:258
+msgid "WPML Settings"
+msgstr ""
+
+#: src/Admin/ImportWpmlPage.php:259
+msgid "Map WPML settings (default language, URL format, etc.) to Polyglot equivalents."
+msgstr ""
+
+#: src/Admin/ImportWpmlPage.php:266
+#: src/Admin/ImportWpmlPage.php:792
+msgid "WooCommerce Data"
+msgstr ""
+
+#: src/Admin/ImportWpmlPage.php:267
+msgid "Import WooCommerce product translations, multi-currency settings, and exchange rates."
+msgstr ""
+
+#: src/Admin/ImportWpmlPage.php:277
+#: src/Admin/ImportWpmlPage.php:372
+msgid "&larr; Back"
+msgstr ""
+
+#: src/Admin/ImportWpmlPage.php:279
+msgid "Preview Import"
+msgstr ""
+
+#: src/Admin/ImportWpmlPage.php:310
+msgid "Import Preview (Dry Run)"
+msgstr ""
+
+#: src/Admin/ImportWpmlPage.php:311
+msgid "This is a preview. No data has been modified yet."
+msgstr ""
+
+#: src/Admin/ImportWpmlPage.php:315
+msgid "Data Type"
+msgstr ""
+
+#: src/Admin/ImportWpmlPage.php:316
+msgid "WPML Source"
+msgstr ""
+
+#: src/Admin/ImportWpmlPage.php:317
+msgid "Polyglot Target"
+msgstr ""
+
+#: src/Admin/ImportWpmlPage.php:318
+msgid "Estimated Rows"
+msgstr ""
+
+#: src/Admin/ImportWpmlPage.php:332
+msgid "Nothing selected for import."
+msgstr ""
+
+#: src/Admin/ImportWpmlPage.php:340
+msgid "Total rows to import"
+msgstr ""
+
+#: src/Admin/ImportWpmlPage.php:345
+msgid "WPML tables are read-only during import. Your existing WPML data will not be modified."
+msgstr ""
+
+#: src/Admin/ImportWpmlPage.php:374
+msgid "Start Import"
+msgstr ""
+
+#: src/Admin/ImportWpmlPage.php:399
+msgid "Importing…"
+msgstr ""
+
+#: src/Admin/ImportWpmlPage.php:405
+msgid "Preparing import…"
+msgstr ""
+
+#: src/Admin/ImportWpmlPage.php:414
+msgid "View Results"
+msgstr ""
+
+#: src/Admin/ImportWpmlPage.php:429
+msgid "Importing languages…"
+msgstr ""
+
+#: src/Admin/ImportWpmlPage.php:432
+msgid "Importing content translations…"
+msgstr ""
+
+#: src/Admin/ImportWpmlPage.php:435
+msgid "Importing string translations…"
+msgstr ""
+
+#: src/Admin/ImportWpmlPage.php:438
+msgid "Importing settings…"
+msgstr ""
+
+#: src/Admin/ImportWpmlPage.php:441
+msgid "Importing WooCommerce data…"
+msgstr ""
+
+#: src/Admin/ImportWpmlPage.php:449
+msgid "Import complete!"
+msgstr ""
+
+#: src/Admin/ImportWpmlPage.php:451
+msgid "All phases completed successfully."
+msgstr ""
+
+#: src/Admin/ImportWpmlPage.php:469
+msgid "Done"
+msgstr ""
+
+#: src/Admin/ImportWpmlPage.php:471
+msgid "Error"
+msgstr ""
+
+#: src/Admin/ImportWpmlPage.php:476
+msgid "AJAX request failed."
+msgstr ""
+
+#: src/Admin/ImportWpmlPage.php:485
+msgid "Nothing to import."
+msgstr ""
+
+#: src/Admin/ImportWpmlPage.php:503
+msgid "Import Complete"
+msgstr ""
+
+#: src/Admin/ImportWpmlPage.php:523
+msgid "Import completed! You can now start using Polyglot for your multilingual content."
+msgstr ""
+
+#: src/Admin/ImportWpmlPage.php:526
+msgid "Next Steps"
+msgstr ""
+
+#: src/Admin/ImportWpmlPage.php:528
+msgid "Verify your languages are correct on the Languages page."
+msgstr ""
+
+#: src/Admin/ImportWpmlPage.php:529
+msgid "Check the Dashboard for translation status."
+msgstr ""
+
+#: src/Admin/ImportWpmlPage.php:530
+msgid "Review URL settings in Settings."
+msgstr ""
+
+#: src/Admin/ImportWpmlPage.php:531
+msgid "Once verified, you can safely deactivate WPML plugins."
+msgstr ""
+
+#. translators: %d: number of imported languages
+#: src/Admin/ImportWpmlPage.php:556
+#, php-format
+msgid "Imported %d languages."
+msgstr ""
+
+#. translators: %d: number of imported translations
+#: src/Admin/ImportWpmlPage.php:574
+#, php-format
+msgid "Imported %d translations."
+msgstr ""
+
+#. translators: %d: total imported count
+#: src/Admin/ImportWpmlPage.php:593
+#, php-format
+msgid "Imported %d strings and translations."
+msgstr ""
+
+#. translators: %d: number of settings mapped
+#: src/Admin/ImportWpmlPage.php:613
+#, php-format
+msgid "Mapped %d settings."
+msgstr ""
+
+#. translators: %d: number of currencies found
+#: src/Admin/ImportWpmlPage.php:631
+#, php-format
+msgid "Imported WooCommerce data (%d currencies)."
+msgstr ""
+
+#: src/Admin/ImportWpmlPage.php:650
+#: src/FileTranslation/Editor/PoEditorController.php:88
+#: src/FileTranslation/Editor/PoEditorController.php:145
+#: src/FileTranslation/Editor/PoEditorController.php:231
+#: src/LanguageSwitcher/NavMenuIntegration.php:193
+msgid "Insufficient permissions."
+msgstr ""
+
+#: src/Admin/ImportWpmlPage.php:680
+#: src/Admin/MenuRegistrar.php:142
+#: src/Admin/MenuRegistrar.php:143
+msgid "Import from WPML"
+msgstr ""
+
+#: src/Admin/ImportWpmlPage.php:783
+#: src/Admin/MenuRegistrar.php:133
+#: src/Admin/MenuRegistrar.php:134
+msgid "Settings"
+msgstr ""
+
+#: src/Admin/LanguageSettingsPage.php:58
+msgid "You do not have permission to add languages."
+msgstr ""
+
+#: src/Admin/LanguageSettingsPage.php:63
+#: src/Admin/LanguageSettingsPage.php:144
+#: src/Admin/SettingsPage.php:110
+#: src/Admin/TranslationEditorPage.php:84
+msgid "Security check failed."
+msgstr ""
+
+#: src/Admin/LanguageSettingsPage.php:180
+msgid "Language Settings"
+msgstr ""
+
+#: src/Admin/LanguageSettingsPage.php:199
+msgid "Locale"
+msgstr ""
+
+#: src/Admin/LanguageSettingsPage.php:200
+msgid "Direction"
+msgstr ""
+
+#: src/Admin/LanguageSettingsPage.php:201
+#: src/Admin/ThemePluginPage.php:324
+msgid "Status"
+msgstr ""
+
+#: src/Admin/LanguageSettingsPage.php:202
+#: src/Admin/SettingsPage.php:407
+#: src/Admin/ThemePluginPage.php:121
+#: src/Admin/ThemePluginPage.php:202
+msgid "Actions"
+msgstr ""
+
+#: src/Admin/LanguageSettingsPage.php:214
+msgid "Default"
+msgstr ""
+
+#: src/Admin/LanguageSettingsPage.php:223
+msgid "Active"
+msgstr ""
+
+#: src/Admin/LanguageSettingsPage.php:225
+msgid "Inactive"
+msgstr ""
+
+#: src/Admin/LanguageSettingsPage.php:232
+msgid "Deactivate"
+msgstr ""
+
+#: src/Admin/LanguageSettingsPage.php:233
+msgid "Set Default"
+msgstr ""
+
+#: src/Admin/LanguageSettingsPage.php:235
+msgid "Activate"
+msgstr ""
+
+#: src/Admin/LanguageSettingsPage.php:245
+msgid "No languages found."
+msgstr ""
+
+#: src/Admin/LanguageSettingsPage.php:252
+msgid "How to Enable the Language Switcher"
+msgstr ""
+
+#: src/Admin/LanguageSettingsPage.php:253
+msgid "Once you have configured and activated multiple languages, you can display the language switcher on your site using one of the following methods:"
+msgstr ""
+
+#: src/Admin/LanguageSettingsPage.php:255
+msgid "Navigation Menu (Recommended)"
+msgstr ""
+
+#: src/Admin/LanguageSettingsPage.php:256
+msgid "Go to Appearance > Menus, select the checkbox for your target languages in the \"PolyGlot Languages\" section on the left, and click \"Add to Menu\"."
+msgstr ""
+
+#: src/Admin/LanguageSettingsPage.php:257
+msgid "Shortcode"
+msgstr ""
+
+#. translators: %s: shortcode code tag
+#: src/Admin/LanguageSettingsPage.php:260
+#, php-format
+msgid "Add the shortcode %s to any page, post, or text widget."
+msgstr ""
+
+#: src/Admin/LanguageSettingsPage.php:262
+msgid "Supported attributes: format (\"list\" or \"dropdown\"), show_flags (\"true\" or \"false\"), show_names (\"true\" or \"false\"), and exclude (comma-separated codes)."
+msgstr ""
+
+#: src/Admin/LanguageSettingsPage.php:263
+msgid "Gutenberg Block"
+msgstr ""
+
+#: src/Admin/LanguageSettingsPage.php:264
+msgid "Insert the \"PolyGlot Language Switcher\" block in the block editor (found under the Widgets category) and customize settings in the sidebar."
+msgstr ""
+
+#: src/Admin/LanguageSettingsPage.php:265
+msgid "Classic Widget"
+msgstr ""
+
+#: src/Admin/LanguageSettingsPage.php:266
+msgid "Go to Appearance > Widgets and drag the \"PolyGlot Language Switcher\" widget into any widget area."
+msgstr ""
+
+#: src/Admin/LanguageSettingsPage.php:267
+msgid "PHP Template Code"
+msgstr ""
+
+#: src/Admin/LanguageSettingsPage.php:268
+msgid "To render the switcher programmatically in your theme files (e.g. header.php), use this code:"
+msgstr ""
+
+#: src/Admin/LanguageSettingsPage.php:290
+#: src/Admin/LanguageSettingsPage.php:338
+msgid "Add Language"
+msgstr ""
+
+#: src/Admin/LanguageSettingsPage.php:297
+msgid "Language Code"
+msgstr ""
+
+#: src/Admin/LanguageSettingsPage.php:299
+msgid "ISO 639-1 two-letter code (e.g. \"en\", \"fr\", \"de\")."
+msgstr ""
+
+#: src/Admin/LanguageSettingsPage.php:303
+msgid "WordPress Locale"
+msgstr ""
+
+#: src/Admin/LanguageSettingsPage.php:305
+msgid "Full WordPress locale code (e.g. \"fr_FR\", \"de_DE\")."
+msgstr ""
+
+#: src/Admin/LanguageSettingsPage.php:309
+msgid "English Name"
+msgstr ""
+
+#: src/Admin/LanguageSettingsPage.php:314
+msgid "Native Name"
+msgstr ""
+
+#: src/Admin/LanguageSettingsPage.php:319
+msgid "Text Direction"
+msgstr ""
+
+#: src/Admin/LanguageSettingsPage.php:321
+msgid "Left to Right (LTR)"
+msgstr ""
+
+#: src/Admin/LanguageSettingsPage.php:322
+msgid "Right to Left (RTL)"
+msgstr ""
+
+#: src/Admin/LanguageSettingsPage.php:327
+msgid "Flag Code"
+msgstr ""
+
+#: src/Admin/LanguageSettingsPage.php:329
+msgid "ISO 3166-1 alpha-2 country code for the flag icon. Defaults to language code."
+msgstr ""
+
+#: src/Admin/LanguageSettingsPage.php:333
+msgid "Sort Order"
+msgstr ""
+
+#: src/Admin/LanguageSettingsPage.php:355
+msgid "URL Format"
+msgstr ""
+
+#: src/Admin/LanguageSettingsPage.php:371
+msgid "Directory prefix (e.g. /en/, /fr/)"
+msgstr ""
+
+#: src/Admin/LanguageSettingsPage.php:372
+msgid "Subdomain (e.g. en.example.com)"
+msgstr ""
+
+#: src/Admin/LanguageSettingsPage.php:373
+msgid "Custom domain per language"
+msgstr ""
+
+#: src/Admin/LanguageSettingsPage.php:374
+msgid "Query parameter (e.g. ?lang=en)"
+msgstr ""
+
+#: src/Admin/LanguageSettingsPage.php:378
+msgid "URL Strategy"
+msgstr ""
+
+#: src/Admin/LanguageSettingsPage.php:393
+msgid "Default Language Prefix"
+msgstr ""
+
+#: src/Admin/LanguageSettingsPage.php:394
+msgid "Hide URL prefix for the default language"
+msgstr ""
+
+#: src/Admin/LanguageSettingsPage.php:395
+msgid "When enabled, the default language URL does not include the language prefix (e.g. example.com instead of example.com/en/)."
+msgstr ""
+
+#: src/Admin/LanguageSettingsPage.php:400
+msgid "Domain Mapping"
+msgstr ""
+
+#: src/Admin/LanguageSettingsPage.php:418
+msgid "Save URL Settings"
+msgstr ""
+
+#: src/Admin/LanguageSettingsPage.php:431
+msgid "Browser Language Redirect"
+msgstr ""
+
+#: src/Admin/LanguageSettingsPage.php:443
+msgid "Auto-Detect Language"
+msgstr ""
+
+#: src/Admin/LanguageSettingsPage.php:444
+msgid "Automatically redirect first-time visitors based on their browser language"
+msgstr ""
+
+#: src/Admin/LanguageSettingsPage.php:445
+msgid "Visitors are redirected only on their first visit. A cookie prevents subsequent redirects."
+msgstr ""
+
+#: src/Admin/LanguageSettingsPage.php:449
+msgid "Save"
+msgstr ""
+
+#: src/Admin/MenuRegistrar.php:88
+#: src/Admin/MenuRegistrar.php:89
+msgid "Dashboard"
+msgstr ""
+
+#: src/Admin/MenuRegistrar.php:106
+#: src/Admin/MenuRegistrar.php:107
+#: src/Admin/TranslationEditorPage.php:454
+msgid "Translations"
+msgstr ""
+
+#: src/Admin/MenuRegistrar.php:115
+#: src/Admin/MenuRegistrar.php:116
+#: src/Admin/TranslationEditorPage.php:453
+msgid "String Translation"
+msgstr ""
+
+#: src/Admin/MenuRegistrar.php:124
+msgid "Theme &amp; Plugin Translations"
+msgstr ""
+
+#: src/Admin/MenuRegistrar.php:125
+msgid "Theme &amp; Plugin Files"
+msgstr ""
+
+#: src/Admin/ProductTranslationHandler.php:108
+msgid "Translation created. Translate the text fields and publish."
+msgstr ""
+
+#: src/Admin/SettingsPage.php:56
+msgid "Translation API"
+msgstr ""
+
+#: src/Admin/SettingsPage.php:57
+msgid "Custom Fields"
+msgstr ""
+
+#: src/Admin/SettingsPage.php:58
+msgid "Post Types & Taxonomies"
+msgstr ""
+
+#: src/Admin/SettingsPage.php:59
+msgid "Media"
+msgstr ""
+
+#: src/Admin/SettingsPage.php:64
+msgid "WooCommerce"
+msgstr ""
+
+#: src/Admin/SettingsPage.php:262
+msgid "Polyglot Settings"
+msgstr ""
+
+#: src/Admin/SettingsPage.php:319
+msgid "Save Changes"
+msgstr ""
+
+#: src/Admin/SettingsPage.php:342
+msgid "Default Provider"
+msgstr ""
+
+#: src/Admin/SettingsPage.php:344
+msgid "Auto (first configured)"
+msgstr ""
+
+#: src/Admin/SettingsPage.php:354
+#: src/Admin/SettingsPage.php:370
+#: src/Admin/SettingsPage.php:378
+msgid "API Key"
+msgstr ""
+
+#: src/Admin/SettingsPage.php:356
+msgid "Get your API key from deepl.com/account/summary."
+msgstr ""
+
+#: src/Admin/SettingsPage.php:360
+msgid "Account Tier"
+msgstr ""
+
+#: src/Admin/SettingsPage.php:362
+msgid "Free"
+msgstr ""
+
+#: src/Admin/SettingsPage.php:363
+msgid "Pro"
+msgstr ""
+
+#: src/Admin/SettingsPage.php:372
+msgid "Google Cloud Translation API key."
+msgstr ""
+
+#: src/Admin/SettingsPage.php:380
+msgid "OpenAI platform API key."
+msgstr ""
+
+#: src/Admin/SettingsPage.php:384
+msgid "Model"
+msgstr ""
+
+#: src/Admin/SettingsPage.php:400
+msgid "Configure how each custom field is handled during translation. \"Copy\" copies the value as-is, \"Translate\" makes it editable per language, \"Ignore\" skips it entirely."
+msgstr ""
+
+#: src/Admin/SettingsPage.php:405
+#: src/Admin/SettingsPage.php:437
+msgid "Field Key"
+msgstr ""
+
+#: src/Admin/SettingsPage.php:406
+#: src/Admin/SettingsPage.php:441
+msgid "Mode"
+msgstr ""
+
+#: src/Admin/SettingsPage.php:419
+#: src/Admin/SettingsPage.php:443
+msgid "Copy"
+msgstr ""
+
+#: src/Admin/SettingsPage.php:420
+#: src/Admin/SettingsPage.php:444
+msgid "Translate"
+msgstr ""
+
+#: src/Admin/SettingsPage.php:421
+#: src/Admin/SettingsPage.php:445
+msgid "Ignore"
+msgstr ""
+
+#: src/Admin/SettingsPage.php:423
+msgid "Remove"
+msgstr ""
+
+#: src/Admin/SettingsPage.php:427
+msgid "No custom fields configured yet."
+msgstr ""
+
+#: src/Admin/SettingsPage.php:434
+msgid "Add Custom Field"
+msgstr ""
+
+#: src/Admin/SettingsPage.php:476
+msgid "Translatable Post Types"
+msgstr ""
+
+#: src/Admin/SettingsPage.php:477
+msgid "Select which post types should support translation."
+msgstr ""
+
+#: src/Admin/SettingsPage.php:491
+msgid "Translatable Taxonomies"
+msgstr ""
+
+#: src/Admin/SettingsPage.php:492
+msgid "Select which taxonomies should support translation."
+msgstr ""
+
+#: src/Admin/SettingsPage.php:518
+msgid "Automatic Duplication"
+msgstr ""
+
+#: src/Admin/SettingsPage.php:519
+msgid "Duplicate uploaded media to all active languages"
+msgstr ""
+
+#: src/Admin/SettingsPage.php:520
+msgid "When enabled, every uploaded media file is automatically duplicated for each active language so it appears in the media library for all languages."
+msgstr ""
+
+#: src/Admin/SettingsPage.php:543
+msgid "Multi-Currency"
+msgstr ""
+
+#: src/Admin/SettingsPage.php:544
+msgid "Enable multi-currency support"
+msgstr ""
+
+#: src/Admin/SettingsPage.php:545
+msgid "Allow customers to view prices and pay in their local currency."
+msgstr ""
+
+#: src/Admin/SettingsPage.php:549
+msgid "Currency Detection"
+msgstr ""
+
+#: src/Admin/SettingsPage.php:551
+msgid "By language (each language has its own currency)"
+msgstr ""
+
+#: src/Admin/SettingsPage.php:552
+msgid "By geolocation (detect from visitor IP)"
+msgstr ""
+
+#: src/Admin/SettingsPage.php:558
+msgid "Exchange Rate Overrides"
+msgstr ""
+
+#: src/Admin/SettingsPage.php:575
+msgid "Override exchange rates per language. Leave empty to use automatic rates."
+msgstr ""
+
+#: src/Admin/ThemePluginPage.php:73
+msgid "Theme & Plugin Translations"
+msgstr ""
+
+#: src/Admin/ThemePluginPage.php:97
+msgid "No translation files found."
+msgstr ""
+
+#: src/Admin/ThemePluginPage.php:110
+msgid "Themes"
+msgstr ""
+
+#: src/Admin/ThemePluginPage.php:111
+msgid "Plugins"
+msgstr ""
+
+#: src/Admin/ThemePluginPage.php:117
+#: src/Admin/TranslationEditorPage.php:235
+msgid "Name"
+msgstr ""
+
+#: src/Admin/ThemePluginPage.php:118
+msgid "Text Domain"
+msgstr ""
+
+#: src/Admin/ThemePluginPage.php:120
+msgid "Files"
+msgstr ""
+
+#: src/Admin/ThemePluginPage.php:146
+msgid "Manage"
+msgstr ""
+
+#: src/Admin/ThemePluginPage.php:170
+msgid "Bundle not found."
+msgstr ""
+
+#: src/Admin/ThemePluginPage.php:180
+#: src/Admin/ThemePluginPage.php:279
+msgid "All bundles"
+msgstr ""
+
+#: src/Admin/ThemePluginPage.php:190
+msgid "No translation files found for this bundle."
+msgstr ""
+
+#: src/Admin/ThemePluginPage.php:197
+#: src/Admin/ThemePluginPage.php:291
+msgid "File"
+msgstr ""
+
+#: src/Admin/ThemePluginPage.php:199
+#: src/Admin/TranslationEditorPage.php:403
+msgid "Type"
+msgstr ""
+
+#: src/Admin/ThemePluginPage.php:200
+msgid "Last Modified"
+msgstr ""
+
+#: src/Admin/ThemePluginPage.php:201
+msgid "Size"
+msgstr ""
+
+#: src/Admin/ThemePluginPage.php:237
+msgid "Edit"
+msgstr ""
+
+#: src/Admin/ThemePluginPage.php:240
+msgid "Template"
+msgstr ""
+
+#: src/Admin/ThemePluginPage.php:242
+msgid "Binary"
+msgstr ""
+
+#: src/Admin/ThemePluginPage.php:271
+msgid "File not found."
+msgstr ""
+
+#: src/Admin/ThemePluginPage.php:288
+msgid "Edit Translations"
+msgstr ""
+
+#: src/Admin/ThemePluginPage.php:293
+#: src/Admin/TranslationEditorPage.php:234
+msgid "Domain"
+msgstr ""
+
+#: src/Admin/ThemePluginPage.php:302
+#: src/Admin/ThemePluginPage.php:364
+msgid "Compile MO/PHP/JSON"
+msgstr ""
+
+#: src/Admin/ThemePluginPage.php:303
+msgid "Saving…"
+msgstr ""
+
+#: src/Admin/ThemePluginPage.php:304
+msgid "Saved!"
+msgstr ""
+
+#: src/Admin/ThemePluginPage.php:305
+msgid "Error saving file."
+msgstr ""
+
+#: src/Admin/ThemePluginPage.php:322
+msgid "Original"
+msgstr ""
+
+#: src/Admin/ThemePluginPage.php:323
+msgid "Translation"
+msgstr ""
+
+#: src/Admin/ThemePluginPage.php:348
+msgid "Translated"
+msgstr ""
+
+#: src/Admin/ThemePluginPage.php:350
+msgid "Untranslated"
+msgstr ""
+
+#: src/Admin/ThemePluginPage.php:356
+msgid "No entries found in this file."
+msgstr ""
+
+#: src/Admin/ThemePluginPage.php:363
+msgid "Save PO File"
+msgstr ""
+
+#: src/Admin/ThemePluginPage.php:414
+msgid "Compiling…"
+msgstr ""
+
+#: src/Admin/ThemePluginPage.php:424
+msgid "Compiled!"
+msgstr ""
+
+#: src/Admin/TranslationEditorPage.php:180
+msgid "All domains"
+msgstr ""
+
+#: src/Admin/TranslationEditorPage.php:191
+msgid "Search strings…"
+msgstr ""
+
+#: src/Admin/TranslationEditorPage.php:193
+msgid "Filter"
+msgstr ""
+
+#. translators: %d: total items
+#: src/Admin/TranslationEditorPage.php:204
+#, php-format
+msgid "%d items"
+msgstr ""
+
+#: src/Admin/TranslationEditorPage.php:233
+msgid "String"
+msgstr ""
+
+#: src/Admin/TranslationEditorPage.php:285
+msgid "No strings found."
+msgstr ""
+
+#: src/Admin/TranslationEditorPage.php:292
+msgid "Save Translations"
+msgstr ""
+
+#: src/Admin/TranslationEditorPage.php:296
+msgid "Auto-Translate All"
+msgstr ""
+
+#: src/Admin/TranslationEditorPage.php:327
+msgid "Translating…"
+msgstr ""
+
+#: src/Admin/TranslationEditorPage.php:340
+msgid "No empty translations to fill."
+msgstr ""
+
+#: src/Admin/TranslationEditorPage.php:360
+msgid "translations completed."
+msgstr ""
+
+#: src/Admin/TranslationEditorPage.php:366
+msgid "Auto-translation failed. Check your API settings."
+msgstr ""
+
+#: src/Admin/TranslationEditorPage.php:389
+msgid "Please configure at least one language before translating content."
+msgstr ""
+
+#: src/Admin/TranslationEditorPage.php:397
+msgid "Translation groups show which pieces of content are linked across languages."
+msgstr ""
+
+#: src/Admin/TranslationEditorPage.php:402
+msgid "Group"
+msgstr ""
+
+#: src/Admin/TranslationEditorPage.php:428
+msgid "Not translated"
+msgstr ""
+
+#: src/Admin/TranslationEditorPage.php:436
+msgid "No translation groups found."
+msgstr ""
+
+#: src/Admin/TranslationEditorPage.php:551
+msgid "(no title)"
+msgstr ""
+
+#: src/Compatibility/DependencyCheck.php:40
+msgid "NovaTools - Polyglot works best with NovaTools core installed and active. Some features may be limited."
+msgstr ""
+
+#. translators: %s: minimum PHP version
+#: src/Compatibility/DependencyCheck.php:77
+#, php-format
+msgid "NovaTools Polyglot requires PHP %s or higher."
+msgstr ""
+
+#. translators: %s: minimum WordPress version
+#: src/Compatibility/DependencyCheck.php:91
+#, php-format
+msgid "NovaTools Polyglot requires WordPress %s or higher."
+msgstr ""
+
+#: src/FileTranslation/Editor/PoEditorController.php:94
+msgid "File path is required."
+msgstr ""
+
+#: src/FileTranslation/Editor/PoEditorController.php:99
+#: src/FileTranslation/Editor/PoEditorController.php:158
+#: src/FileTranslation/Editor/PoEditorController.php:243
+msgid "File path is not in an allowed directory."
+msgstr ""
+
+#: src/FileTranslation/Editor/PoEditorController.php:103
+msgid "PO file not found or unreadable."
+msgstr ""
+
+#: src/FileTranslation/Editor/PoEditorController.php:154
+msgid "File path and domain are required."
+msgstr ""
+
+#: src/FileTranslation/Editor/PoEditorController.php:166
+msgid "Invalid entries data."
+msgstr ""
+
+#: src/FileTranslation/Editor/PoEditorController.php:184
+msgid "Failed to write PO file."
+msgstr ""
+
+#: src/FileTranslation/Editor/PoEditorController.php:239
+msgid "File path, domain, and locale are required."
+msgstr ""
+
+#: src/LanguageSwitcher/AdminBarSwitcher.php:198
+msgid "Switch language"
+msgstr ""
+
+#. translators: %s: Language native name
+#: src/LanguageSwitcher/AdminBarSwitcher.php:224
+#, php-format
+msgid "Switch to %s"
+msgstr ""
+
+#: src/LanguageSwitcher/NavMenuIntegration.php:84
+msgid "PolyGlot Languages"
+msgstr ""
+
+#: src/LanguageSwitcher/NavMenuIntegration.php:103
+msgid "No active languages found."
+msgstr ""
+
+#: src/LanguageSwitcher/NavMenuIntegration.php:131
+msgid "Add to Menu"
+msgstr ""
+
+#: src/LanguageSwitcher/NavMenuIntegration.php:200
+msgid "Invalid request."
+msgstr ""
+
+#: src/LanguageSwitcher/SwitcherWidget.php:33
+msgid "PolyGlot Language Switcher"
+msgstr ""
+
+#: src/LanguageSwitcher/SwitcherWidget.php:36
+msgid "Display a language switcher with flags and language names."
+msgstr ""
+
+#: src/LanguageSwitcher/SwitcherWidget.php:110
+#: src/WooCommerce/Currency/CurrencySwitcher.php:321
+msgid "Title:"
+msgstr ""
+
+#: src/LanguageSwitcher/SwitcherWidget.php:122
+#: src/WooCommerce/Currency/CurrencySwitcher.php:327
+msgid "Format:"
+msgstr ""
+
+#: src/LanguageSwitcher/SwitcherWidget.php:130
+#: src/WooCommerce/Currency/CurrencySwitcher.php:331
+msgid "List"
+msgstr ""
+
+#: src/LanguageSwitcher/SwitcherWidget.php:133
+#: src/WooCommerce/Currency/CurrencySwitcher.php:330
+msgid "Dropdown"
+msgstr ""
+
+#: src/LanguageSwitcher/SwitcherWidget.php:145
+msgid "Show flags"
+msgstr ""
+
+#: src/LanguageSwitcher/SwitcherWidget.php:156
+msgid "Show language names"
+msgstr ""
+
+#: src/LanguageSwitcher/SwitcherWidget.php:161
+msgid "Exclude languages (comma-separated codes):"
+msgstr ""
+
+#: src/Media/MediaTranslator.php:313
+msgid "All languages"
+msgstr ""
+
+#: src/RestApi/AutoTranslateController.php:75
+msgid "Auto-translation service is not available."
+msgstr ""
+
+#: src/RestApi/AutoTranslateController.php:87
+msgid "Target language code is required."
+msgstr ""
+
+#. translators: %s: provider ID
+#: src/RestApi/AutoTranslateController.php:101
+#, php-format
+msgid "Translation provider \"%s\" is not registered."
+msgstr ""
+
+#. translators: %s: provider name
+#: src/RestApi/AutoTranslateController.php:115
+#, php-format
+msgid "Translation provider \"%s\" is not configured. Please set the API key in settings."
+msgstr ""
+
+#: src/RestApi/AutoTranslateController.php:165
+msgid "Sorry, you are not allowed to run auto-translation."
+msgstr ""
+
+#: src/RestApi/AutoTranslateController.php:181
+msgid "Target language code for auto-translation."
+msgstr ""
+
+#: src/RestApi/AutoTranslateController.php:187
+msgid "Translation provider ID (e.g. \"deepl\", \"google\", \"openai\"). Defaults to the configured provider."
+msgstr ""
+
+#: src/RestApi/AutoTranslateController.php:192
+msgid "Optional array of specific string IDs to translate. Omit to translate all untranslated strings for the language."
+msgstr ""
+
+#: src/RestApi/ContentController.php:263
+#: src/RestApi/TranslationsController.php:101
+#: src/RestApi/TranslationsController.php:150
+#: src/RestApi/TranslationsController.php:191
+msgid "Translation service is not available."
+msgstr ""
+
+#: src/RestApi/ContentController.php:276
+msgid "An \"items\" array is required."
+msgstr ""
+
+#: src/RestApi/ContentController.php:367
+#: src/RestApi/TranslationsController.php:311
+msgid "Sorry, you are not allowed to manage translations."
+msgstr ""
+
+#: src/RestApi/ContentController.php:383
+msgid "Filter by post type (e.g. \"post\", \"page\"). Accepts a single value or comma-separated list."
+msgstr ""
+
+#: src/RestApi/ContentController.php:388
+msgid "Search by post title."
+msgstr ""
+
+#: src/RestApi/ContentController.php:393
+msgid "Filter by language code. Returns only content with translations in this language."
+msgstr ""
+
+#: src/RestApi/ContentController.php:398
+msgid "Filter by translation status (requires \"language\" param). Use \"not_registered\" for content without any translation row."
+msgstr ""
+
+#: src/RestApi/ContentController.php:403
+#: src/RestApi/StringsController.php:375
+#: src/RestApi/TranslationsController.php:346
+msgid "Maximum number of items per page."
+msgstr ""
+
+#: src/RestApi/ContentController.php:410
+#: src/RestApi/StringsController.php:382
+#: src/RestApi/TranslationsController.php:353
+msgid "Current page of the collection."
+msgstr ""
+
+#: src/RestApi/ContentController.php:426
+msgid "Array of content items to register. Each item needs element_id, element_type, and language_code."
+msgstr ""
+
+#: src/RestApi/LanguagesController.php:76
+#: src/RestApi/LanguagesController.php:90
+msgid "Language code."
+msgstr ""
+
+#: src/RestApi/LanguagesController.php:105
+msgid "Language code to deactivate."
+msgstr ""
+
+#: src/RestApi/LanguagesController.php:127
+#: src/RestApi/LanguagesController.php:165
+msgid "Language service is not available."
+msgstr ""
+
+#. translators: %s: language code
+#: src/RestApi/LanguagesController.php:179
+#: src/RestApi/LanguagesController.php:331
+#, php-format
+msgid "Language \"%s\" not found."
+msgstr ""
+
+#: src/RestApi/LanguagesController.php:201
+#: src/RestApi/LanguagesController.php:266
+#: src/RestApi/LanguagesController.php:313
+msgid "Language manager is not available."
+msgstr ""
+
+#. translators: %s: language code
+#: src/RestApi/LanguagesController.php:281
+#, php-format
+msgid "Could not deactivate language \"%s\". It may be the default language or does not exist."
+msgstr ""
+
+#. translators: %s: language code
+#: src/RestApi/LanguagesController.php:350
+#, php-format
+msgid "Failed to set \"%s\" as the default language."
+msgstr ""
+
+#: src/RestApi/LanguagesController.php:387
+msgid "Sorry, you are not allowed to view languages."
+msgstr ""
+
+#: src/RestApi/LanguagesController.php:405
+msgid "Sorry, you are not allowed to add languages."
+msgstr ""
+
+#: src/RestApi/LanguagesController.php:423
+msgid "Sorry, you are not allowed to deactivate languages."
+msgstr ""
+
+#: src/RestApi/LanguagesController.php:441
+msgid "Sorry, you are not allowed to update languages."
+msgstr ""
+
+#: src/RestApi/LanguagesController.php:571
+msgid "Return only active languages."
+msgstr ""
+
+#: src/RestApi/LanguagesController.php:586
+msgid "Short language code (e.g. \"en\", \"fr\")."
+msgstr ""
+
+#: src/RestApi/LanguagesController.php:595
+msgid "Full WordPress locale (e.g. \"en_US\", \"fr_FR\")."
+msgstr ""
+
+#: src/RestApi/LanguagesController.php:601
+msgid "Language name in English."
+msgstr ""
+
+#: src/RestApi/LanguagesController.php:607
+msgid "Language name in its own script."
+msgstr ""
+
+#: src/RestApi/LanguagesController.php:613
+msgid "Text direction: \"ltr\" or \"rtl\"."
+msgstr ""
+
+#: src/RestApi/LanguagesController.php:619
+msgid "ISO flag code."
+msgstr ""
+
+#: src/RestApi/LanguagesController.php:624
+msgid "PHP date format string."
+msgstr ""
+
+#: src/RestApi/LanguagesController.php:629
+msgid "PHP time format string."
+msgstr ""
+
+#: src/RestApi/LanguagesController.php:634
+#: src/RestApi/LanguagesController.php:653
+msgid "Admin sort order (lower values first)."
+msgstr ""
+
+#: src/RestApi/LanguagesController.php:649
+msgid "Set this language as the site default."
+msgstr ""
+
+#: src/RestApi/ScanController.php:284
+msgid "Could not determine text domain. Please provide a domain parameter."
+msgstr ""
+
+#: src/RestApi/ScanController.php:296
+msgid "No PO files found."
+msgstr ""
+
+#: src/RestApi/ScanController.php:418
+msgid "You must pass confirm: true to delete stale strings."
+msgstr ""
+
+#: src/RestApi/ScanController.php:509
+msgid "Sorry, you are not allowed to manage scanning."
+msgstr ""
+
+#: src/RestApi/ScanController.php:523
+msgid "Plugin slug is required."
+msgstr ""
+
+#. translators: %s: plugin slug
+#: src/RestApi/ScanController.php:535
+#, php-format
+msgid "Plugin directory not found: %s"
+msgstr ""
+
+#: src/RestApi/ScanController.php:548
+msgid "Theme slug is required."
+msgstr ""
+
+#. translators: %s: theme slug
+#: src/RestApi/ScanController.php:560
+#, php-format
+msgid "Theme not found: %s"
+msgstr ""
+
+#: src/RestApi/ScanController.php:573
+msgid "Path is required when scope is \"path\"."
+msgstr ""
+
+#. translators: %s: directory path
+#: src/RestApi/ScanController.php:585
+#, php-format
+msgid "Directory not found: %s"
+msgstr ""
+
+#: src/RestApi/ScanController.php:597
+msgid "Scope must be plugin, theme, or path."
+msgstr ""
+
+#: src/RestApi/ScanController.php:631
+msgid "Scan scope: plugin, theme, or path."
+msgstr ""
+
+#: src/RestApi/ScanController.php:638
+msgid "Plugin or theme slug."
+msgstr ""
+
+#: src/RestApi/ScanController.php:643
+msgid "Custom directory path (when scope is \"path\")."
+msgstr ""
+
+#: src/RestApi/ScanController.php:648
+msgid "Text domain filter. Auto-detected if omitted."
+msgstr ""
+
+#: src/RestApi/ScanController.php:659
+msgid "Array of locale codes to import. Imports all if omitted."
+msgstr ""
+
+#: src/RestApi/ScanController.php:671
+msgid "Must be true to proceed with deletion."
+msgstr ""
+
+#: src/RestApi/SettingsController.php:75
+msgid "Invalid settings data."
+msgstr ""
+
+#: src/RestApi/SettingsController.php:96
+msgid "Sorry, you are not allowed to manage settings."
+msgstr ""
+
+#: src/RestApi/StringsController.php:107
+#: src/RestApi/StringsController.php:161
+msgid "String service is not available."
+msgstr ""
+
+#: src/RestApi/StringsController.php:185
+#: src/RestApi/StringsController.php:262
+msgid "String manager is not available."
+msgstr ""
+
+#: src/RestApi/StringsController.php:198
+msgid "domain and name are required."
+msgstr ""
+
+#: src/RestApi/StringsController.php:277
+msgid "String ID and language are required."
+msgstr ""
+
+#. translators: %d: string ID
+#: src/RestApi/StringsController.php:292
+#, php-format
+msgid "String with ID %d not found."
+msgstr ""
+
+#: src/RestApi/StringsController.php:336
+msgid "Sorry, you are not allowed to manage strings."
+msgstr ""
+
+#: src/RestApi/StringsController.php:352
+msgid "Filter by text domain."
+msgstr ""
+
+#: src/RestApi/StringsController.php:357
+msgid "Filter by package ID."
+msgstr ""
+
+#: src/RestApi/StringsController.php:361
+msgid "Search strings by value or name."
+msgstr ""
+
+#: src/RestApi/StringsController.php:366
+msgid "Language code for translation status filtering."
+msgstr ""
+
+#: src/RestApi/StringsController.php:371
+#: src/RestApi/StringsController.php:476
+msgid "Translation status: 0 = untranslated, 1 = translated, 2 = needs_update."
+msgstr ""
+
+#: src/RestApi/StringsController.php:388
+msgid "Sort column."
+msgstr ""
+
+#: src/RestApi/StringsController.php:395
+msgid "Sort order."
+msgstr ""
+
+#: src/RestApi/StringsController.php:412
+msgid "Text domain for the string."
+msgstr ""
+
+#: src/RestApi/StringsController.php:418
+msgid "Machine-readable string identifier."
+msgstr ""
+
+#: src/RestApi/StringsController.php:424
+msgid "The source string value."
+msgstr ""
+
+#: src/RestApi/StringsController.php:429
+msgid "Optional grouping context."
+msgstr ""
+
+#: src/RestApi/StringsController.php:435
+msgid "String type: LINE, TEXTAREA, or VISUAL."
+msgstr ""
+
+#: src/RestApi/StringsController.php:441
+msgid "Human-readable label for the string."
+msgstr ""
+
+#: src/RestApi/StringsController.php:446
+msgid "Package ID to link the string to."
+msgstr ""
+
+#: src/RestApi/StringsController.php:460
+msgid "String ID to translate."
+msgstr ""
+
+#: src/RestApi/StringsController.php:465
+msgid "Target language code."
+msgstr ""
+
+#: src/RestApi/StringsController.php:471
+msgid "The translated string value."
+msgstr ""
+
+#: src/RestApi/TranslationsController.php:76
+msgid "Translation group ID (trid)."
+msgstr ""
+
+#. translators: %d: translation group ID
+#: src/RestApi/TranslationsController.php:165
+#, php-format
+msgid "Translation group with trid %d not found."
+msgstr ""
+
+#: src/RestApi/TranslationsController.php:209
+msgid "element_type, element_id, and language_code are required."
+msgstr ""
+
+#: src/RestApi/TranslationsController.php:283
+msgid "Failed to save translation."
+msgstr ""
+
+#: src/RestApi/TranslationsController.php:327
+msgid "Filter by element type (e.g. \"post_post\", \"tax_category\")."
+msgstr ""
+
+#: src/RestApi/TranslationsController.php:332
+msgid "Filter by language code."
+msgstr ""
+
+#: src/RestApi/TranslationsController.php:337
+msgid "Filter by translation group ID."
+msgstr ""
+
+#: src/RestApi/TranslationsController.php:341
+msgid "Filter by translation status."
+msgstr ""
+
+#: src/RestApi/TranslationsController.php:359
+msgid "Sort column. Allowed: translation_id, trid, element_type, element_id, language_code, status, translated_at."
+msgstr ""
+
+#: src/RestApi/TranslationsController.php:365
+msgid "Sort direction: ASC or DESC."
+msgstr ""
+
+#: src/RestApi/TranslationsController.php:381
+msgid "Element type (e.g. \"post_post\", \"tax_category\")."
+msgstr ""
+
+#: src/RestApi/TranslationsController.php:387
+msgid "WordPress element ID (post ID, term ID, etc.)."
+msgstr ""
+
+#: src/RestApi/TranslationsController.php:392
+msgid "Language code for this element."
+msgstr ""
+
+#: src/RestApi/TranslationsController.php:398
+msgid "Source language code for the translation."
+msgstr ""
+
+#: src/RestApi/TranslationsController.php:404
+msgid "Translation group ID. Auto-generated if omitted."
+msgstr ""
+
+#: src/RestApi/TranslationsController.php:408
+msgid "Translation status."
+msgstr ""
+
+#: src/WooCommerce/Currency/CurrencySwitcher.php:172
+msgid "Select currency"
+msgstr ""
+
+#: src/WooCommerce/Currency/CurrencySwitcher.php:275
+msgid "Polyglot Currency Switcher"
+msgstr ""
+
+#: src/WooCommerce/Currency/CurrencySwitcher.php:277
+msgid "Lets customers switch the active WooCommerce currency."
+msgstr ""
+
+#: src/WooCommerce/Currency/CurrencySwitcher.php:336
+msgid "Show currency symbols"
+msgstr ""
+
+#: src/WooCommerce/Currency/CurrencySwitcher.php:340
+msgid "Show currency names"
+msgstr ""
+
+#: src/WooCommerce/Currency/ExchangeRateService.php:107
+msgid "No exchange-rate provider configured."
+msgstr ""
+
+#: src/WooCommerce/Currency/ExchangeRateService.php:111
+msgid "No API key configured for the exchange-rate provider."
+msgstr ""
+
+#: src/WooCommerce/Currency/ExchangeRateService.php:176
+msgid "Unknown exchange-rate provider."
+msgstr ""
+
+#. translators: %d: HTTP status code.
+#: src/WooCommerce/Currency/ExchangeRateService.php:256
+#, php-format
+msgid "Exchange-rate provider returned HTTP %d."
+msgstr ""
+
+#: src/WooCommerce/Currency/ExchangeRateService.php:265
+msgid "Could not parse exchange-rate response."
+msgstr ""
+
+#: templates/language-switcher/dropdown.php:31
+msgid "Language switcher"
+msgstr ""
