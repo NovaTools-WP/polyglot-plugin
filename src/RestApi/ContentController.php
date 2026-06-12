@@ -122,7 +122,7 @@ class ContentController {
 			FROM {$translations_table} copy
 			INNER JOIN {$translations_table} src
 				ON src.trid = copy.trid AND src.element_id < copy.element_id
-			WHERE copy.element_type = CONCAT('post_', p.post_type)
+			WHERE BINARY copy.element_type = BINARY CONCAT('post_', p.post_type)
 		)";
 
 		if ( ! empty( $search ) ) {
@@ -153,7 +153,7 @@ class ContentController {
 			SELECT p.ID
 			FROM {$posts_table} p
 			LEFT JOIN {$translations_table} t
-				ON t.element_id = p.ID AND t.element_type = CONCAT('post_', p.post_type)
+				ON t.element_id = p.ID AND BINARY t.element_type = BINARY CONCAT('post_', p.post_type)
 			WHERE {$where_clause}
 			GROUP BY p.ID
 			{$having}
@@ -166,7 +166,7 @@ class ContentController {
 		$posts_sql = "SELECT p.ID AS element_id, p.post_type, p.post_title, p.post_excerpt
 			FROM {$posts_table} p
 			LEFT JOIN {$translations_table} t
-				ON t.element_id = p.ID AND t.element_type = CONCAT('post_', p.post_type)
+				ON t.element_id = p.ID AND BINARY t.element_type = BINARY CONCAT('post_', p.post_type)
 			WHERE {$where_clause}
 			GROUP BY p.ID
 			{$having}

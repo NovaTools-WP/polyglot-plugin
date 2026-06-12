@@ -28,9 +28,9 @@ use NovaTools\Polyglot\Compatibility\DependencyCheck;
 // (get($id) without type) PHP will fatal.  Loading these directly ensures
 // the correct 2.0 signatures are in memory first.
 if ( ! interface_exists( 'Psr\Container\ContainerInterface', false ) ) {
-	require_once plugin_dir_path( __FILE__ ) . 'vendor/pimple/Psr/Container/ContainerExceptionInterface.php';
-	require_once plugin_dir_path( __FILE__ ) . 'vendor/pimple/Psr/Container/NotFoundExceptionInterface.php';
-	require_once plugin_dir_path( __FILE__ ) . 'vendor/pimple/Psr/Container/ContainerInterface.php';
+	require_once plugin_dir_path( __FILE__ ) . 'vendor/psr/container/src/ContainerExceptionInterface.php';
+	require_once plugin_dir_path( __FILE__ ) . 'vendor/psr/container/src/NotFoundExceptionInterface.php';
+	require_once plugin_dir_path( __FILE__ ) . 'vendor/psr/container/src/ContainerInterface.php';
 }
 
 require_once plugin_dir_path( __FILE__ ) . 'vendor/autoload.php';

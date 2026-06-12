@@ -1,7 +1,14 @@
 const { apiUrl, nonce } = window.novaToolsPolyglot || {};
 
 async function request(method, path, body = null) {
-	const url = `${apiUrl}polyglot/v1${path}`;
+	let url = `${apiUrl}polyglot/v1${path}`;
+	if (apiUrl && apiUrl.includes("?")) {
+		const separatorIndex = path.indexOf("?");
+		if (separatorIndex !== -1) {
+			const cleanPath = path.substring(0, separatorIndex) + "&" + path.substring(separatorIndex + 1);
+			url = `${apiUrl}polyglot/v1${cleanPath}`;
+		}
+	}
 	const options = {
 		method,
 		headers: {

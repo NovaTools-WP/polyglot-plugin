@@ -518,7 +518,7 @@ class LanguagesController {
 		$translated_content = (int) $wpdb->get_var(
 			$wpdb->prepare(
 				"SELECT COUNT(*) FROM {$translations_table} t
-				INNER JOIN {$posts_table} p ON t.element_id = p.ID AND t.element_type = CONCAT('post_', p.post_type)
+				INNER JOIN {$posts_table} p ON t.element_id = p.ID AND BINARY t.element_type = BINARY CONCAT('post_', p.post_type)
 				WHERE t.language_code = %s AND t.status IN ('translated', 'completed') AND p.post_status = 'publish' AND p.post_type IN ({$placeholders})",
 				array_merge( array( $language_code ), $post_types )
 			)
