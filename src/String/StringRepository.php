@@ -449,9 +449,6 @@ class StringRepository {
 		$this->cache->delete( $this->cache->key( 'string_translation', (int) $data['string_id'], $data['language'] ) );
 		$this->cache->delete( $this->cache->key( 'string_translations', (int) $data['string_id'] ) );
 
-		// Invalidate search result caches so translations appear immediately.
-		$this->cache->flushGroup();
-
 		return $id;
 	}
 

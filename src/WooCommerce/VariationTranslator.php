@@ -288,19 +288,27 @@ class VariationTranslator {
 		 */
 		$keys = apply_filters( 'polyglot_woocommerce_copied_variation_meta', $keys, $sourceId, $targetId );
 
-		foreach ( $keys as $key ) {
-			$value = get_post_meta( $sourceId, $key, true );
+		$allMeta = get_post_meta( $sourceId );
 
-			if ( '' !== $value ) {
-				update_post_meta( $targetId, $key, $value );
+		foreach ( $keys as $key ) {
+			if ( isset( $allMeta[ $key ] ) ) {
+				$value  = $allMeta[ $key ];
+				$single = is_array( $value ) && count( $value ) === 1 ? $value[0] : $value;
+
+				if ( '' !== $single ) {
+					update_post_meta( $targetId, $key, $single );
+				}
 			}
 		}
 
 		// Translate the variation's attribute terms (e.g. pa_color => slug).
-		$attributes = get_post_meta( $sourceId, '_attributes', true );
+		if ( isset( $allMeta['_attributes'] ) ) {
+			$attributes = $allMeta['_attributes'];
+			$attributes = is_array( $attributes ) && count( $attributes ) === 1 ? $attributes[0] : $attributes;
 
-		if ( is_array( $attributes ) && ! empty( $attributes ) ) {
-			update_post_meta( $targetId, '_attributes', $this->translateAttributes( $attributes, $targetLanguage ) );
+			if ( is_array( $attributes ) && ! empty( $attributes ) ) {
+				update_post_meta( $targetId, '_attributes', $this->translateAttributes( $attributes, $targetLanguage ) );
+			}
 		}
 	}
 

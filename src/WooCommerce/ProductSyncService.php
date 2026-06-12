@@ -126,7 +126,8 @@ class ProductSyncService {
 			return false;
 		}
 
-		$syncable = array(
+		$allMeta   = get_post_meta( $sourceId );
+		$syncable  = array(
 			'_regular_price',
 			'_sale_price',
 			'_price',
@@ -163,8 +164,10 @@ class ProductSyncService {
 		}
 
 		foreach ( $syncable as $key ) {
-			$value = get_post_meta( $sourceId, $key, true );
-			update_post_meta( $targetId, $key, $value );
+			if ( isset( $allMeta[ $key ] ) ) {
+				$value = $allMeta[ $key ];
+				update_post_meta( $targetId, $key, is_array( $value ) && count( $value ) === 1 ? $value[0] : $value );
+			}
 		}
 
 		// Keep the translation's checksum in sync with the source so it is not
@@ -292,20 +295,27 @@ class ProductSyncService {
 	 * @return int Number of products updated.
 	 */
 	public function recalculateChecksums(): int {
-		$count = 0;
+		$count     = 0;
+		$offset    = 0;
+		$batchSize = 200;
 
-		$products = get_posts( array(
-			'post_type'      => 'product',
-			'posts_per_page' => -1,
-			'post_status'    => 'any',
-			'fields'         => 'ids',
-		) );
+		do {
+			$products = get_posts( array(
+				'post_type'      => 'product',
+				'posts_per_page' => $batchSize,
+				'offset'         => $offset,
+				'post_status'    => 'any',
+				'fields'         => 'ids',
+			) );
 
-		foreach ( $products as $productId ) {
-			if ( $this->updateChecksum( (int) $productId ) ) {
-				++$count;
+			foreach ( $products as $productId ) {
+				if ( $this->updateChecksum( (int) $productId ) ) {
+					++$count;
+				}
 			}
-		}
+
+			$offset += $batchSize;
+		} while ( count( $products ) === $batchSize );
 
 		return $count;
 	}

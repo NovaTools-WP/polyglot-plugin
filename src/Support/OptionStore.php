@@ -117,7 +117,7 @@ class OptionStore {
 	private function save( array $settings ): bool {
 		$this->cache = $settings;
 
-		return update_option( self::OPTION_KEY, $settings );
+		return update_option( self::OPTION_KEY, $settings, false );
 	}
 
 	/**

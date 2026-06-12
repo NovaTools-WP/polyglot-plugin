@@ -89,7 +89,8 @@ class ServiceProvider implements ServiceProviderInterface {
 
 		$container['post.sync'] = static function ( Container $c ) {
 			return new \NovaTools\Polyglot\Translation\PostTranslation\PostSyncService(
-				$c['translation.repository']
+				$c['translation.repository'],
+				$c['options']
 			);
 		};
 
@@ -196,7 +197,8 @@ class ServiceProvider implements ServiceProviderInterface {
 			return new \NovaTools\Polyglot\Media\MediaSyncService(
 				$c['media.translator'],
 				$c['media.repository'],
-				$c['translation.repository']
+				$c['translation.repository'],
+				$c['cache']
 			);
 		};
 

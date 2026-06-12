@@ -11,6 +11,7 @@
 
 namespace NovaTools\Polyglot\Media;
 
+use NovaTools\Polyglot\Support\Cache;
 use NovaTools\Polyglot\Translation\TranslationRepository;
 
 defined( 'ABSPATH' ) || exit;
@@ -39,20 +40,30 @@ class MediaSyncService {
 	private TranslationRepository $translationRepository;
 
 	/**
+	 * Cache wrapper instance.
+	 *
+	 * @var Cache
+	 */
+	private Cache $cache;
+
+	/**
 	 * Constructor.
 	 *
 	 * @param MediaTranslator       $translator            The media translator.
 	 * @param MediaRepository       $repository            The media repository.
 	 * @param TranslationRepository $translationRepository The translation repository.
+	 * @param Cache                 $cache                 The polyglot cache wrapper.
 	 */
 	public function __construct(
 		MediaTranslator $translator,
 		MediaRepository $repository,
-		TranslationRepository $translationRepository
+		TranslationRepository $translationRepository,
+		Cache $cache
 	) {
 		$this->translator            = $translator;
 		$this->repository            = $repository;
 		$this->translationRepository = $translationRepository;
+		$this->cache                 = $cache;
 	}
 
 	/**
@@ -106,8 +117,8 @@ class MediaSyncService {
 				}
 			}
 
-			// Clear object cache between batches to keep memory usage stable.
-			wp_cache_flush();
+			// Clear polyglot cache between batches to keep memory usage stable.
+			$this->cache->flushGroup();
 		}
 
 		// Restore term counting.
@@ -224,31 +235,23 @@ class MediaSyncService {
 		$skipped    = 0;
 		$errors     = 0;
 
-		// Find all posts of the given type that have gallery meta.
-		$posts = get_posts( array(
-			'post_type'      => $postType,
-			'posts_per_page' => -1,
-			'meta_key'       => $metaKey,
-			'meta_compare'   => '!=',
-			'meta_value'     => '',
-			'fields'         => 'ids',
-		) );
-
-		if ( empty( $posts ) ) {
-			return array(
-				'translated' => 0,
-				'skipped'    => 0,
-				'errors'     => 0,
-			);
-		}
-
 		wp_defer_term_counting( true );
 
-		$batches = array_chunk( $posts, $batchSize );
+		$offset = 0;
 
-		foreach ( $batches as $batch ) {
-			foreach ( $batch as $postId ) {
-				$result = $this->translateGallery( $postId, $targetLanguage, $metaKey );
+		do {
+			$posts = get_posts( array(
+				'post_type'      => $postType,
+				'posts_per_page' => $batchSize,
+				'offset'         => $offset,
+				'meta_key'       => $metaKey,
+				'meta_compare'   => '!=',
+				'meta_value'     => '',
+				'fields'         => 'ids',
+			) );
+
+			foreach ( $posts as $postId ) {
+				$result = $this->translateGallery( (int) $postId, $targetLanguage, $metaKey );
 
 				if ( $result ) {
 					++$translated;
@@ -257,9 +260,10 @@ class MediaSyncService {
 				}
 			}
 
-			// Clear cache between batches.
 			wp_cache_flush();
-		}
+
+			$offset += $batchSize;
+		} while ( count( $posts ) === $batchSize );
 
 		wp_defer_term_counting( false );
 

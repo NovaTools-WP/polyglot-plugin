@@ -124,8 +124,12 @@ class SlugTranslator {
 			)
 		);
 
-		// Flush cached slugs for this post (all languages).
-		$this->cache->flushGroup();
+		// Flush cached slugs for this post (all active languages).
+		$activeLanguages = apply_filters( 'polyglot_active_language_codes', array() );
+
+		foreach ( $activeLanguages as $lang ) {
+			$this->cache->delete( $this->cache->key( 'slug', $postId, $lang ) );
+		}
 
 		return (int) $deleted;
 	}

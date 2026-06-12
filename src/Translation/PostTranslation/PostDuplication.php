@@ -182,9 +182,16 @@ class PostDuplication {
 			$mode = $fieldSettings[ $key ] ?? $this->getDefaultFieldMode( $key );
 
 			if ( 'ignore' === $mode || 'translate' === $mode ) {
+				unset( $meta[ $key ] );
 				continue;
 			}
+		}
 
+		if ( empty( $meta ) ) {
+			return;
+		}
+
+		foreach ( $meta as $key => $values ) {
 			// "copy" mode — duplicate all values.
 			foreach ( $values as $value ) {
 				add_post_meta( $targetId, $key, maybe_unserialize( $value ) );

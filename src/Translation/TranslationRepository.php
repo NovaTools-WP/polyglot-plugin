@@ -214,6 +214,7 @@ class TranslationRepository {
 			return false;
 		}
 
+		wp_cache_delete( 'polyglot_next_trid', 'polyglot' );
 		$this->invalidateCache( (int) $data['trid'], $data['element_type'], (int) $data['element_id'] );
 
 		return (int) $wpdb->insert_id;
@@ -261,12 +262,20 @@ class TranslationRepository {
 	 * @return int
 	 */
 	public function getNextTrid(): int {
+		$cached = wp_cache_get( 'polyglot_next_trid', 'polyglot' );
+
+		if ( false !== $cached ) {
+			return (int) $cached + 1;
+		}
+
 		global $wpdb;
 
 		$table = Schema::getTableName( 'polyglot_translations' );
 
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
 		$max = (int) $wpdb->get_var( "SELECT MAX(trid) FROM {$table}" );
+
+		wp_cache_set( 'polyglot_next_trid', $max, 'polyglot' );
 
 		return $max + 1;
 	}

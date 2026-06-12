@@ -55,10 +55,11 @@ class CustomFieldTranslator {
 			return 0;
 		}
 
-		$copied = 0;
+		$copied      = 0;
+		$fieldSettings = $this->options->get( 'custom_fields', array() );
 
 		foreach ( $meta as $key => $values ) {
-			$mode = $this->getFieldMode( $key );
+			$mode = $fieldSettings[ $key ] ?? $this->getDefaultMode( $key );
 
 			if ( 'copy' !== $mode ) {
 				continue;
@@ -94,10 +95,13 @@ class CustomFieldTranslator {
 			return 0;
 		}
 
-		$copyFields = array();
+		$copyFields    = array();
+		$fieldSettings = $this->options->get( 'custom_fields', array() );
 
 		foreach ( $meta as $key => $values ) {
-			if ( 'copy' === $this->getFieldMode( $key ) ) {
+			$mode = $fieldSettings[ $key ] ?? $this->getDefaultMode( $key );
+
+			if ( 'copy' === $mode ) {
 				$copyFields[ $key ] = $values;
 			}
 		}

@@ -273,11 +273,16 @@ class ProductTranslator {
 		 */
 		$keys = apply_filters( 'polyglot_woocommerce_copied_product_meta', $keys, $sourceId, $targetId );
 
-		foreach ( $keys as $key ) {
-			$value = get_post_meta( $sourceId, $key, true );
+		$allMeta = get_post_meta( $sourceId );
 
-			if ( '' !== $value ) {
-				update_post_meta( $targetId, $key, $value );
+		foreach ( $keys as $key ) {
+			if ( isset( $allMeta[ $key ] ) ) {
+				$value = $allMeta[ $key ];
+				$single = is_array( $value ) && count( $value ) === 1 ? $value[0] : $value;
+
+				if ( '' !== $single ) {
+					update_post_meta( $targetId, $key, $single );
+				}
 			}
 		}
 	}

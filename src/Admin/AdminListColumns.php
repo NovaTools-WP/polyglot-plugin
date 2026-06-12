@@ -70,6 +70,8 @@ class AdminListColumns {
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_admin_styles' ) );
 		add_action( 'save_post', array( $this, 'link_translation_on_save' ), 10, 3 );
 		add_action( 'save_post', array( $this, 'mark_translation_completed' ), 20, 3 );
+		add_action( 'save_post', array( $this, 'invalidate_excluded_posts_cache' ), 30, 3 );
+		add_action( 'before_delete_post', array( $this, 'invalidate_excluded_posts_cache_on_delete' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_translation_context_script' ) );
 		add_action( 'pre_get_posts', array( $this, 'filter_translated_posts' ) );
 	}
@@ -152,23 +154,28 @@ class AdminListColumns {
 			return;
 		}
 
-		$table = Schema::getTableName( 'polyglot_translations' );
+		$post_type    = $this->get_current_post_type();
+		$cache_key    = "excluded_posts:{$post_type}:{$default->code}";
+		$exclude_ids  = wp_cache_get( $cache_key, 'polyglot' );
 
-		global $wpdb;
+		if ( false === $exclude_ids ) {
+			$table = Schema::getTableName( 'polyglot_translations' );
 
-		// Find all post IDs that are translations (not the source).
-		// A source post has a row with language_code = default language.
-		// A translated copy has a row with language_code != default AND its trid has a source.
-		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery
-		$exclude_ids = $wpdb->get_col(
-			$wpdb->prepare(
-				"SELECT t1.element_id FROM {$table} t1
-				INNER JOIN {$table} t2 ON t1.trid = t2.trid AND t2.language_code = %s
-				WHERE t1.element_type LIKE 'post_%%' AND t1.language_code != %s",
-				$default->code,
-				$default->code
-			)
-		);
+			global $wpdb;
+
+			// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery
+			$exclude_ids = $wpdb->get_col(
+				$wpdb->prepare(
+					"SELECT t1.element_id FROM {$table} t1
+					INNER JOIN {$table} t2 ON t1.trid = t2.trid AND t2.language_code = %s
+					WHERE t1.element_type LIKE 'post_%%' AND t1.language_code != %s",
+					$default->code,
+					$default->code
+				)
+			);
+
+			wp_cache_set( $cache_key, $exclude_ids, 'polyglot', 5 * MINUTE_IN_SECONDS );
+		}
 
 		if ( ! empty( $exclude_ids ) ) {
 			$exclude_ids = array_map( 'intval', $exclude_ids );
@@ -678,6 +685,49 @@ class AdminListColumns {
 
 		if ( $row && 'completed' !== $row['status'] ) {
 			$this->translation_repository->updateStatus( $element_type, $post_id, 'completed' );
+		}
+	}
+
+	/**
+	 * Invalidate the excluded posts cache when a post is saved.
+	 *
+	 * @param int      $post_id Post ID.
+	 * @param \WP_Post $post    Post object.
+	 * @param bool     $update  Whether this is an update.
+	 * @return void
+	 */
+	public function invalidate_excluded_posts_cache( int $post_id, \WP_Post $post, bool $update ): void {
+		$this->flush_excluded_posts_cache( $post->post_type );
+	}
+
+	/**
+	 * Invalidate the excluded posts cache when a post is deleted.
+	 *
+	 * @param int $post_id Post ID.
+	 * @return void
+	 */
+	public function invalidate_excluded_posts_cache_on_delete( int $post_id ): void {
+		$post = get_post( $post_id );
+
+		if ( $post ) {
+			$this->flush_excluded_posts_cache( $post->post_type );
+		}
+	}
+
+	/**
+	 * Flush all excluded posts cache entries for a post type.
+	 *
+	 * Iterates over active languages and deletes the cache key for each,
+	 * since we cannot delete by prefix with the WordPress object cache API.
+	 *
+	 * @param string $post_type Post type.
+	 * @return void
+	 */
+	private function flush_excluded_posts_cache( string $post_type ): void {
+		$languages = $this->language_repository->getActive();
+
+		foreach ( $languages as $lang ) {
+			wp_cache_delete( "excluded_posts:{$post_type}:{$lang->code}", 'polyglot' );
 		}
 	}
 

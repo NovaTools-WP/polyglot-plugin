@@ -47,6 +47,13 @@ class Admin {
 		if ( DependencyCheck::is_novatools_active() ) {
 			add_action( 'admin_enqueue_scripts', array( $this, 'register_addon_script' ), 9 );
 		}
+
+		// Invalidate cached plugin/theme data when they change.
+		add_action( 'activated_plugin', array( $this, 'invalidate_plugins_cache' ) );
+		add_action( 'deactivated_plugin', array( $this, 'invalidate_plugins_cache' ) );
+		add_action( 'upgrader_process_complete', array( $this, 'invalidate_plugins_cache' ) );
+		add_action( 'upgrader_process_complete', array( $this, 'invalidate_themes_cache' ) );
+		add_action( 'switch_theme', array( $this, 'invalidate_themes_cache' ) );
 	}
 
 	/**
@@ -99,6 +106,11 @@ class Admin {
 	}
 
 	private function get_installed_plugins(): array {
+		$cached = get_transient( 'polyglot_installed_plugins' );
+		if ( $cached !== false ) {
+			return $cached;
+		}
+
 		$plugins = array();
 		$all     = get_plugins();
 
@@ -115,10 +127,17 @@ class Admin {
 			);
 		}
 
+		set_transient( 'polyglot_installed_plugins', $plugins, DAY_IN_SECONDS );
+
 		return $plugins;
 	}
 
 	private function get_installed_themes(): array {
+		$cached = get_transient( 'polyglot_installed_themes' );
+		if ( $cached !== false ) {
+			return $cached;
+		}
+
 		$themes = array();
 		$all    = wp_get_themes();
 
@@ -129,6 +148,26 @@ class Admin {
 			);
 		}
 
+		set_transient( 'polyglot_installed_themes', $themes, DAY_IN_SECONDS );
+
 		return $themes;
+	}
+
+	/**
+	 * Invalidate the installed plugins transient.
+	 *
+	 * @return void
+	 */
+	public function invalidate_plugins_cache(): void {
+		delete_transient( 'polyglot_installed_plugins' );
+	}
+
+	/**
+	 * Invalidate the installed themes transient.
+	 *
+	 * @return void
+	 */
+	public function invalidate_themes_cache(): void {
+		delete_transient( 'polyglot_installed_themes' );
 	}
 }

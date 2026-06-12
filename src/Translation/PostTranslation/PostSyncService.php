@@ -11,6 +11,7 @@
 
 namespace NovaTools\Polyglot\Translation\PostTranslation;
 
+use NovaTools\Polyglot\Support\OptionStore;
 use NovaTools\Polyglot\Translation\TranslationRepository;
 
 defined( 'ABSPATH' ) || exit;
@@ -25,12 +26,21 @@ class PostSyncService {
 	private TranslationRepository $repository;
 
 	/**
+	 * Option store for reading translatable post type settings.
+	 *
+	 * @var OptionStore
+	 */
+	private OptionStore $optionStore;
+
+	/**
 	 * Constructor.
 	 *
-	 * @param TranslationRepository $repository Translation repository.
+	 * @param TranslationRepository $repository  Translation repository.
+	 * @param OptionStore           $optionStore Option store.
 	 */
-	public function __construct( TranslationRepository $repository ) {
-		$this->repository = $repository;
+	public function __construct( TranslationRepository $repository, OptionStore $optionStore ) {
+		$this->repository  = $repository;
+		$this->optionStore = $optionStore;
 	}
 
 	/**
@@ -65,13 +75,21 @@ class PostSyncService {
 			return;
 		}
 
-		if ( ! $update ) {
-			// New post — store initial checksum.
-			$this->updateChecksum( $postId, PostTranslator::getElementType( $post->post_type ) );
+		// Bail early if post type isn't configured for translation.
+		$translatableTypes = $this->optionStore->get( 'post_types', array() );
+		if ( ! in_array( $post->post_type, $translatableTypes, true ) ) {
 			return;
 		}
 
-		$this->detectChanges( $postId, PostTranslator::getElementType( $post->post_type ) );
+		$elementType = PostTranslator::getElementType( $post->post_type );
+
+		if ( ! $update ) {
+			// New post — store initial checksum.
+			$this->updateChecksum( $postId, $elementType );
+			return;
+		}
+
+		$this->detectChanges( $postId, $elementType );
 	}
 
 	/**
@@ -225,19 +243,26 @@ class PostSyncService {
 	public function recalculateChecksums( string $postType = 'post' ): int {
 		$elementType = PostTranslator::getElementType( $postType );
 		$count       = 0;
+		$offset      = 0;
+		$batchSize   = 200;
 
-		$posts = get_posts( array(
-			'post_type'      => $postType,
-			'posts_per_page' => -1,
-			'post_status'    => 'any',
-			'fields'         => 'ids',
-		) );
+		do {
+			$posts = get_posts( array(
+				'post_type'      => $postType,
+				'posts_per_page' => $batchSize,
+				'offset'         => $offset,
+				'post_status'    => 'any',
+				'fields'         => 'ids',
+			) );
 
-		foreach ( $posts as $postId ) {
-			if ( $this->updateChecksum( $postId, $elementType ) ) {
-				++$count;
+			foreach ( $posts as $postId ) {
+				if ( $this->updateChecksum( (int) $postId, $elementType ) ) {
+					++$count;
+				}
 			}
-		}
+
+			$offset += $batchSize;
+		} while ( count( $posts ) === $batchSize );
 
 		return $count;
 	}
