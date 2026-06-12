@@ -1035,14 +1035,11 @@ class MigrateFromWpml {
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$rows = $wpdb->get_results( "SELECT code, locale FROM {$table}", ARRAY_A );
 
-		$map = array();
-		if ( is_array( $rows ) ) {
-			foreach ( $rows as $row ) {
-				$map[ $row['code'] ] = $row['locale'];
-			}
+		if ( ! is_array( $rows ) ) {
+			return array();
 		}
 
-		return $map;
+		return array_column( $rows, 'locale', 'code' );
 	}
 
 	/**
@@ -1070,14 +1067,11 @@ class MigrateFromWpml {
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$rows = $wpdb->get_results( "SELECT lang_code, flag_url FROM {$table}", ARRAY_A );
 
-		$map = array();
-		if ( is_array( $rows ) ) {
-			foreach ( $rows as $row ) {
-				$map[ $row['lang_code'] ] = $row['flag_url'];
-			}
+		if ( ! is_array( $rows ) ) {
+			return array();
 		}
 
-		return $map;
+		return array_column( $rows, 'flag_url', 'lang_code' );
 	}
 
 	/**
@@ -1163,14 +1157,11 @@ class MigrateFromWpml {
 			ARRAY_A
 		);
 
-		$map = array();
-		if ( is_array( $rows ) ) {
-			foreach ( $rows as $row ) {
-				$map[ (int) $row['translation_id'] ] = $row;
-			}
+		if ( ! is_array( $rows ) ) {
+			return array();
 		}
 
-		return $map;
+		return array_column( $rows, null, 'translation_id' );
 	}
 
 	/**
