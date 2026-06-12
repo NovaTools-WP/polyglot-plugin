@@ -413,18 +413,26 @@ class WpmlApiShim {
 
 		// Log a notice when WPML is still active alongside the shim.
 		if ( $wpml_active && $shimmed ) {
-			// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
-			error_log(
-				'[Polyglot] WPML API Shim partially loaded: some functions are already defined by WPML. ' .
-				'This is expected during migration. Deactivate WPML to use the full shim.'
-			);
+			$logged = get_transient( 'polyglot_wpml_shim_partial_logged' );
+			if ( ! $logged ) {
+				// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
+				error_log(
+					'[Polyglot] WPML API Shim partially loaded: some functions are already defined by WPML. ' .
+					'This is expected during migration. Deactivate WPML to use the full shim.'
+				);
+				set_transient( 'polyglot_wpml_shim_partial_logged', true, DAY_IN_SECONDS );
+			}
 		}
 
 		if ( $wpml_active && ! $shimmed ) {
-			// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
-			error_log(
-				'[Polyglot] WPML is active — WPML API Shim skipped (all functions already defined by WPML).'
-			);
+			$logged = get_transient( 'polyglot_wpml_shim_skipped_logged' );
+			if ( ! $logged ) {
+				// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
+				error_log(
+					'[Polyglot] WPML is active — WPML API Shim skipped (all functions already defined by WPML).'
+				);
+				set_transient( 'polyglot_wpml_shim_skipped_logged', true, DAY_IN_SECONDS );
+			}
 		}
 
 		return $shimmed;

@@ -150,11 +150,6 @@ class Plugin {
 			$this->get( 'admin.menu_registrar' )->register();
 		}
 
-		// Wire WPML import AJAX handlers.
-		if ( is_admin() && $this->has( 'admin.import_wpml' ) ) {
-			$this->get( 'admin.import_wpml' )->register();
-		}
-
 		// Wire admin list columns for translation status.
 		if ( is_admin() && $this->has( 'admin.list_columns' ) ) {
 			$this->get( 'admin.list_columns' )->register();
@@ -163,11 +158,6 @@ class Plugin {
 		// Wire product translation handler admin action.
 		if ( is_admin() && $this->has( 'admin.product_translation_handler' ) ) {
 			$this->get( 'admin.product_translation_handler' )->register();
-		}
-
-		// Wire language settings admin-post handler.
-		if ( is_admin() && $this->has( 'admin.languages' ) ) {
-			$this->get( 'admin.languages' )->register();
 		}
 
 		// Load optional modules (WooCommerce, …) when their host plugins load.

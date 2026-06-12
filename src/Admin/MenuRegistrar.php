@@ -2,13 +2,8 @@
 /**
  * Admin menu registrar for NovaTools Polyglot.
  *
- * Handles the dual-mode menu registration pattern:
- *   - NovaTools integrated: adds Polyglot submenu under the NovaTools parent menu.
- *   - Standalone: registers a top-level "Polyglot" menu with subpages when
- *     NovaTools core is not active.
- *
- * All admin page classes are resolved from the DI container so they receive
- * their dependencies via constructor injection.
+ * Handles the menu registration pattern:
+ *   - NovaTools integrated: registers admin settings.
  *
  * @package NovaTools\Polyglot\Admin
  */
@@ -41,110 +36,14 @@ class MenuRegistrar {
 	/**
 	 * Register hooks based on the current mode.
 	 *
-	 * When NovaTools core is active, menu integration happens through the
-	 * filter hooks in the main plugin class. This method handles the
-	 * standalone fallback.
+	 * When NovaTools core is active, registers admin settings for the REST API.
 	 *
 	 * @return void
 	 */
 	public function register(): void {
 		if ( DependencyCheck::is_novatools_active() ) {
-			// NovaTools handles menu rendering; register admin pages for
-			// REST API / AJAX endpoints used by the React components.
 			add_action( 'admin_init', array( $this, 'registerSettings' ) );
-			return;
 		}
-
-		// Standalone mode: register traditional WordPress admin menus.
-		add_action( 'admin_menu', array( $this, 'registerStandaloneMenu' ) );
-		add_action( 'admin_init', array( $this, 'registerSettings' ) );
-	}
-
-	/**
-	 * Register standalone WordPress admin menus.
-	 *
-	 * Creates a top-level "Polyglot" menu with subpages for each section:
-	 * Dashboard, Languages, Translations, String Translation, Theme/Plugin
-	 * Files, Settings, and Import from WPML.
-	 *
-	 * @return void
-	 */
-	public function registerStandaloneMenu(): void {
-		$capability = 'manage_options';
-		$slug       = 'novatools-polyglot';
-
-		add_menu_page(
-			__( 'Polyglot', 'novatools-polyglot' ),
-			__( 'Polyglot', 'novatools-polyglot' ),
-			$capability,
-			$slug,
-			array( $this, 'renderDashboard' ),
-			'dashicons-translation',
-			57
-		);
-
-		add_submenu_page(
-			$slug,
-			__( 'Dashboard', 'novatools-polyglot' ),
-			__( 'Dashboard', 'novatools-polyglot' ),
-			$capability,
-			$slug,
-			array( $this, 'renderDashboard' )
-		);
-
-		add_submenu_page(
-			$slug,
-			__( 'Languages', 'novatools-polyglot' ),
-			__( 'Languages', 'novatools-polyglot' ),
-			$capability,
-			$slug . '-languages',
-			array( $this, 'renderLanguages' )
-		);
-
-		add_submenu_page(
-			$slug,
-			__( 'Translations', 'novatools-polyglot' ),
-			__( 'Translations', 'novatools-polyglot' ),
-			$capability,
-			$slug . '-translations',
-			array( $this, 'renderTranslations' )
-		);
-
-		add_submenu_page(
-			$slug,
-			__( 'String Translation', 'novatools-polyglot' ),
-			__( 'String Translation', 'novatools-polyglot' ),
-			$capability,
-			$slug . '-strings',
-			array( $this, 'renderStrings' )
-		);
-
-		add_submenu_page(
-			$slug,
-			__( 'Theme &amp; Plugin Translations', 'novatools-polyglot' ),
-			__( 'Theme &amp; Plugin Files', 'novatools-polyglot' ),
-			$capability,
-			$slug . '-files',
-			array( $this, 'renderFiles' )
-		);
-
-		add_submenu_page(
-			$slug,
-			__( 'Settings', 'novatools-polyglot' ),
-			__( 'Settings', 'novatools-polyglot' ),
-			$capability,
-			$slug . '-settings',
-			array( $this, 'renderSettings' )
-		);
-
-		add_submenu_page(
-			$slug,
-			__( 'Import from WPML', 'novatools-polyglot' ),
-			__( 'Import from WPML', 'novatools-polyglot' ),
-			$capability,
-			$slug . '-import-wpml',
-			array( $this, 'renderImportWpml' )
-		);
 	}
 
 	/**
@@ -247,96 +146,5 @@ class MenuRegistrar {
 		 * @param array $input  Original raw input.
 		 */
 		return apply_filters( 'polyglot_sanitize_settings', $clean, $input );
-	}
-
-	/**
-	 * Render the Dashboard page.
-	 *
-	 * @return void
-	 */
-	public function renderDashboard(): void {
-		$page = new DashboardPage( $this->plugin );
-		$page->render();
-	}
-
-	/**
-	 * Render the Languages page.
-	 *
-	 * @return void
-	 */
-	public function renderLanguages(): void {
-		$page = new LanguageSettingsPage( $this->plugin );
-		$page->render();
-	}
-
-	/**
-	 * Render the Translations page.
-	 *
-	 * @return void
-	 */
-	public function renderTranslations(): void {
-		$page = new TranslationEditorPage( $this->plugin );
-		$page->render();
-	}
-
-	/**
-	 * Render the String Translation page.
-	 *
-	 * @return void
-	 */
-	public function renderStrings(): void {
-		$page = new TranslationEditorPage( $this->plugin );
-		$page->render( 'strings' );
-	}
-
-	/**
-	 * Render the Theme & Plugin Files page.
-	 *
-	 * @return void
-	 */
-	public function renderFiles(): void {
-		$page = new ThemePluginPage( $this->plugin );
-		$page->render();
-	}
-
-	/**
-	 * Render the Settings page.
-	 *
-	 * @return void
-	 */
-	public function renderSettings(): void {
-		$page = new SettingsPage( $this->plugin );
-		$page->render();
-	}
-
-	/**
-	 * Render the Import from WPML page.
-	 *
-	 * @return void
-	 */
-	public function renderImportWpml(): void {
-		$page = new ImportWpmlPage( $this->plugin );
-		$page->render();
-	}
-
-	/**
-	 * Get the admin page URLs for standalone mode.
-	 *
-	 * Useful for building navigation links in templates.
-	 *
-	 * @return array Associative array of page slug => URL.
-	 */
-	public function getPageUrls(): array {
-		$base = 'novatools-polyglot';
-
-		return array(
-			'dashboard'    => admin_url( "admin.php?page={$base}" ),
-			'languages'    => admin_url( "admin.php?page={$base}-languages" ),
-			'translations' => admin_url( "admin.php?page={$base}-translations" ),
-			'strings'      => admin_url( "admin.php?page={$base}-strings" ),
-			'files'        => admin_url( "admin.php?page={$base}-files" ),
-			'settings'     => admin_url( "admin.php?page={$base}-settings" ),
-			'import_wpml'  => admin_url( "admin.php?page={$base}-import-wpml" ),
-		);
 	}
 }

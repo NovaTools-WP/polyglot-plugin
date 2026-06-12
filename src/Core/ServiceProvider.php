@@ -283,41 +283,11 @@ class ServiceProvider implements ServiceProviderInterface {
 			);
 		};
 
-		$container['admin.dashboard'] = $container->protect( static function ( Container $c ) {
-			return new \NovaTools\Polyglot\Admin\DashboardPage(
-				\NovaTools\Polyglot\Core\Plugin::getInstance()
-			);
-		});
-
-		$container['admin.languages'] = static function ( Container $c ) {
-			return new \NovaTools\Polyglot\Admin\LanguageSettingsPage(
-				\NovaTools\Polyglot\Core\Plugin::getInstance()
-			);
-		};
-
-		$container['admin.translation_editor'] = $container->protect( static function ( Container $c ) {
-			return new \NovaTools\Polyglot\Admin\TranslationEditorPage(
-				\NovaTools\Polyglot\Core\Plugin::getInstance()
-			);
-		});
-
 		$container['admin.theme_plugin'] = $container->protect( static function ( Container $c ) {
 			return new \NovaTools\Polyglot\Admin\ThemePluginPage(
 				\NovaTools\Polyglot\Core\Plugin::getInstance()
 			);
 		});
-
-		$container['admin.settings'] = $container->protect( static function ( Container $c ) {
-			return new \NovaTools\Polyglot\Admin\SettingsPage(
-				\NovaTools\Polyglot\Core\Plugin::getInstance()
-			);
-		});
-
-		$container['admin.import_wpml'] = static function ( Container $c ) {
-			return new \NovaTools\Polyglot\Admin\ImportWpmlPage(
-				\NovaTools\Polyglot\Core\Plugin::getInstance()
-			);
-		};
 
 		$container['admin.list_columns'] = static function ( Container $c ) {
 			return new \NovaTools\Polyglot\Admin\AdminListColumns(
