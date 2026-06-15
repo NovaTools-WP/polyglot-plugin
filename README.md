@@ -60,6 +60,37 @@ NovaTools Polyglot includes native support for WooCommerce. Once both plugins ar
 
 If you are migrating from WPML, or if you use plugins that specifically check for WPML functions, NovaTools Polyglot provides a compatibility layer (`WpmlApiShim.php`). It seamlessly intercepts many standard WPML hooks and functions, allowing dependent plugins to continue working without issues.
 
+## 👨‍💻 Developer Setup
+
+If you want to contribute to the codebase, follow these steps:
+
+1. **Clone the repository** into your WordPress `wp-content/plugins/` directory:
+
+   ```bash
+   cd wp-content/plugins
+   git clone git@github.com:NovaTools-WP/polyglot-plugin.git novatools-polyglot
+   cd novatools-polyglot
+   ```
+
+2. **Install PHP dependencies** using Composer:
+
+   ```bash
+   composer install
+   ```
+
+3. **Install JavaScript dependencies** and **build assets**:
+
+   ```bash
+   npm install
+   npm run build
+   ```
+
+4. **Development mode** (with HMR):
+
+   ```bash
+   npm run dev
+   ```
+
 ## 📄 License
 
 This project is licensed under the GPLv2 License - see the [LICENSE](LICENSE) file for details.

@@ -1,4 +1,4 @@
-# Copyright (C) 2026 Siim Liimand
+# Copyright (C) 2026 NovaTools
 # This file is distributed under the GPLv2 or later.
 msgid ""
 msgstr ""
@@ -31,7 +31,7 @@ msgstr ""
 
 #. Author of the plugin
 #: novatools-polyglot.php
-msgid "Siim Liimand"
+msgid "NovaTools"
 msgstr ""
 
 #: plugin.php:168

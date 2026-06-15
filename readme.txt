@@ -1,5 +1,5 @@
 === NovaTools - Polyglot ===
-Contributors: Siim Liimand
+Contributors: NovaTools
 Tags: multilingual, translation, woocommerce, wpml, language, alternative for wpml
 Tested up to: 6.5
 Requires at least: 6.0
