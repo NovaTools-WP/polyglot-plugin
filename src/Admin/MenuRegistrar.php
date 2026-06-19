@@ -71,14 +71,50 @@ class MenuRegistrar {
 	public function sanitizeSettings( array $input ): array {
 		$clean = array();
 
-		$clean['url_strategy']    = $this->sanitizeUrlStrategy( $input['url_strategy'] ?? array() );
-		$clean['browser_redirect'] = $this->sanitizeBrowserRedirect( $input['browser_redirect'] ?? array() );
-		$clean['api']             = $this->sanitizeApiKeys( $input['api'] ?? array() );
+		// URL Strategy & Hide Default Prefix
+		$clean['url_strategy']                 = $this->sanitizeUrlStrategy( $input['url_strategy'] ?? array() );
+		$clean['hide_default_language_prefix'] = $clean['url_strategy']['hide_default_prefix'];
+
+		// Browser redirect setting (handles boolean from React or legacy array/object)
+		$clean['browser_redirect']          = $this->sanitizeBrowserRedirect( $input['browser_redirect'] ?? ( $input['browser_language_redirect'] ?? false ) );
+		$clean['browser_language_redirect'] = $clean['browser_redirect'];
+
+		// API Settings (Map translation_api to api for providers, and also store translation_api for React settings page)
+		$clean['api'] = $this->sanitizeApiKeys( $input['api'] ?? array() );
+		if ( isset( $input['translation_api'] ) && is_array( $input['translation_api'] ) ) {
+			$transApi = $input['translation_api'];
+			if ( isset( $transApi['provider'] ) ) {
+				$clean['api']['default_provider'] = sanitize_text_field( $transApi['provider'] );
+			}
+			if ( isset( $transApi['deepl_key'] ) ) {
+				$clean['api']['deepl']['key'] = sanitize_text_field( $transApi['deepl_key'] );
+			}
+			if ( isset( $transApi['google_key'] ) ) {
+				$clean['api']['google']['key'] = sanitize_text_field( $transApi['google_key'] );
+			}
+			if ( isset( $transApi['openai_key'] ) ) {
+				$clean['api']['openai']['key'] = sanitize_text_field( $transApi['openai_key'] );
+			}
+		}
+
+		// Also save translation_api for the frontend to read back on page load
+		$clean['translation_api'] = array(
+			'provider'   => $clean['api']['default_provider'] ?? '',
+			'deepl_key'  => $clean['api']['deepl']['key'] ?? '',
+			'google_key' => $clean['api']['google']['key'] ?? '',
+			'openai_key' => $clean['api']['openai']['key'] ?? '',
+		);
+
+		// Other configuration lists and options
 		$clean['custom_fields']   = $this->sanitizeCustomFields( $input['custom_fields'] ?? array() );
 		$clean['post_types']      = $this->sanitizePostTypes( $input['post_types'] ?? array() );
 		$clean['taxonomies']      = $this->sanitizeTaxonomies( $input['taxonomies'] ?? array() );
 		$clean['media']           = $this->sanitizeMedia( $input['media'] ?? array() );
 		$clean['woocommerce']     = $this->sanitizeWooCommerce( $input['woocommerce'] ?? array() );
+
+		// Root-level options
+		$clean['default_language']        = sanitize_text_field( $input['default_language'] ?? 'en' );
+		$clean['auto_scan_on_activation'] = ! empty( $input['auto_scan_on_activation'] );
 
 		/**
 		 * Filter sanitized Polyglot settings before saving.
@@ -106,7 +142,10 @@ class MenuRegistrar {
 			true
 		) ? $input['method'] : 'directory';
 
-		$clean['hide_default'] = ! empty( $input['hide_default'] );
+		// Support both hide_default_prefix (frontend) and hide_default (legacy backend)
+		$hide_val = ! empty( $input['hide_default_prefix'] ) || ! empty( $input['hide_default'] );
+		$clean['hide_default_prefix'] = $hide_val;
+		$clean['hide_default']        = $hide_val;
 
 		if ( isset( $input['domain_mapping'] ) && is_array( $input['domain_mapping'] ) ) {
 			foreach ( $input['domain_mapping'] as $code => $domain ) {
@@ -120,13 +159,14 @@ class MenuRegistrar {
 	/**
 	 * Sanitize browser redirect settings.
 	 *
-	 * @param array $input Raw browser redirect input.
-	 * @return array Sanitized browser redirect settings.
+	 * @param mixed $input Raw browser redirect input.
+	 * @return bool Sanitized browser redirect settings.
 	 */
-	private function sanitizeBrowserRedirect( array $input ): array {
-		return array(
-			'enabled' => ! empty( $input['enabled'] ),
-		);
+	private function sanitizeBrowserRedirect( mixed $input ): bool {
+		if ( is_array( $input ) ) {
+			return ! empty( $input['enabled'] );
+		}
+		return (bool) $input;
 	}
 
 	/**
@@ -139,8 +179,16 @@ class MenuRegistrar {
 		$clean = array();
 
 		foreach ( array( 'deepl', 'google', 'openai' ) as $provider ) {
-			$key = $input[ $provider ]['key'] ?? '';
-			$clean[ $provider ]['key'] = sanitize_text_field( $key );
+			$clean[ $provider ] = array();
+			if ( isset( $input[ $provider ] ) && is_array( $input[ $provider ] ) ) {
+				foreach ( $input[ $provider ] as $sub_key => $val ) {
+					$clean[ $provider ][ sanitize_text_field( $sub_key ) ] = sanitize_text_field( $val );
+				}
+			}
+			// Ensure 'key' exists at least as an empty string if not set
+			if ( ! isset( $clean[ $provider ]['key'] ) ) {
+				$clean[ $provider ]['key'] = '';
+			}
 		}
 
 		if ( isset( $input['default_provider'] ) ) {
@@ -200,7 +248,10 @@ class MenuRegistrar {
 	 */
 	private function sanitizeMedia( array $input ): array {
 		return array(
-			'duplicate_on_upload' => ! empty( $input['duplicate_on_upload'] ),
+			'duplicate_on_upload'    => ! empty( $input['duplicate_on_upload'] ),
+			'translate_alt_text'     => ! empty( $input['translate_alt_text'] ),
+			'translate_captions'     => ! empty( $input['translate_captions'] ),
+			'translate_descriptions' => ! empty( $input['translate_descriptions'] ),
 		);
 	}
 

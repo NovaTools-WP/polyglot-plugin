@@ -58,7 +58,7 @@ class SettingsController {
 	public function getItems( WP_REST_Request $request ): WP_REST_Response {
 		$store = new OptionStore();
 
-		return new WP_REST_Response( $store->all(), 200 );
+		return new WP_REST_Response( $this->formatSettings( $store->all() ), 200 );
 	}
 
 	/**
@@ -96,7 +96,57 @@ class SettingsController {
 		$store  = new OptionStore();
 		$store->merge( $settings );
 
-		return new WP_REST_Response( $store->all(), 200 );
+		return new WP_REST_Response( $this->formatSettings( $store->all() ), 200 );
+	}
+
+	/**
+	 * Format settings array to ensure frontend compatibility.
+	 *
+	 * @param array $settings Raw options from the database.
+	 * @return array Formatted settings.
+	 */
+	private function formatSettings( array $settings ): array {
+		// Ensure url_strategy is always returned as an array/object to the frontend
+		if ( isset( $settings['url_strategy'] ) && ! is_array( $settings['url_strategy'] ) ) {
+			$settings['url_strategy'] = array(
+				'method'              => (string) $settings['url_strategy'],
+				'hide_default_prefix' => ! empty( $settings['hide_default_language_prefix'] ),
+			);
+		}
+
+		// Ensure browser_redirect is always returned as a boolean to the frontend
+		if ( isset( $settings['browser_redirect'] ) ) {
+			if ( is_array( $settings['browser_redirect'] ) ) {
+				$settings['browser_redirect'] = ! empty( $settings['browser_redirect']['enabled'] );
+			} else {
+				$settings['browser_redirect'] = (bool) $settings['browser_redirect'];
+			}
+		} else {
+			$settings['browser_redirect'] = ! empty( $settings['browser_language_redirect'] );
+		}
+		$settings['browser_language_redirect'] = $settings['browser_redirect'];
+
+		// Ensure translation_api is populated for the frontend React components
+		if ( ! isset( $settings['translation_api'] ) || ! is_array( $settings['translation_api'] ) ) {
+			$settings['translation_api'] = array(
+				'provider'   => $settings['api']['default_provider'] ?? '',
+				'deepl_key'  => $settings['api']['deepl']['key'] ?? '',
+				'google_key' => $settings['api']['google']['key'] ?? '',
+				'openai_key' => $settings['api']['openai']['key'] ?? '',
+			);
+		}
+
+		// Ensure media settings are populated
+		if ( ! isset( $settings['media'] ) || ! is_array( $settings['media'] ) ) {
+			$settings['media'] = array(
+				'duplicate_on_upload'    => false,
+				'translate_alt_text'     => true,
+				'translate_captions'     => false,
+				'translate_descriptions' => false,
+			);
+		}
+
+		return $settings;
 	}
 
 	/**
