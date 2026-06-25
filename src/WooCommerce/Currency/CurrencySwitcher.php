@@ -198,7 +198,7 @@ class CurrencySwitcher {
 		?>
 		<ul class="polyglot-currency-switcher polyglot-currency-switcher--list">
 			<?php foreach ( $currencies as $currency ) : ?>
-				<li class="<?php echo $active === $currency ? 'polyglot-currency-switcher__active' : ''; ?>">
+				<li class="<?php echo esc_attr( $active === $currency ? 'polyglot-currency-switcher__active' : '' ); ?>">
 					<a href="<?php echo esc_url( add_query_arg( 'polyglot_currency', $currency ) ); ?>">
 						<?php echo esc_html( $this->formatLabel( $currency, $symbols, $names, $args ) ); ?>
 					</a>

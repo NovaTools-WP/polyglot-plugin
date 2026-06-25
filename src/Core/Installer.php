@@ -13,6 +13,7 @@
 namespace NovaTools\Polyglot\Core;
 
 use NovaTools\Polyglot\Database\Schema;
+use NovaTools\Polyglot\Language\FlagResolver;
 use NovaTools\Polyglot\Traits\FlushesCache;
 use NovaTools\Polyglot\WooCommerce\Currency\ExchangeRateService;
 
@@ -115,6 +116,12 @@ class Installer {
 			ExchangeRateService::scheduleOnActivation();
 		}
 
+		// Correct language flag codes that defaulted to the language code,
+		// which produced wrong flags (e.g. Estonian "et" → Ethiopia "ET").
+		if ( version_compare( $from, '1.0.2', '<' ) ) {
+			static::normalizeFlagCodes();
+		}
+
 		/**
 		 * Fires after a Polyglot version upgrade.
 		 *
@@ -122,6 +129,50 @@ class Installer {
 		 * @param string $to   New version.
 		 */
 		do_action( 'polyglot_upgraded', $from, $to );
+	}
+
+	/**
+	 * Normalize language flag codes after the move to FlagResolver.
+	 *
+	 * Previously `flag_code` defaulted to the language code, which produced
+	 * wrong flags (e.g. Estonian "et" was treated as country "ET" / Ethiopia).
+	 * This rewrites every row whose flag_code still equals its language code
+	 * (or is empty) to the correct ISO country code. Rows carrying a custom
+	 * flag_code that differs from the language code are left untouched.
+	 *
+	 * @return void
+	 */
+	private static function normalizeFlagCodes(): void {
+		global $wpdb;
+
+		$table = Schema::getTableName( 'polyglot_languages' );
+
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+		$rows = $wpdb->get_results( "SELECT code, flag_code FROM {$table}", ARRAY_A );
+
+		if ( ! is_array( $rows ) ) {
+			return;
+		}
+
+		foreach ( $rows as $row ) {
+			$code      = $row['code'];
+			$flag_code = $row['flag_code'] ?? '';
+
+			// Preserve any explicit override; only fix the stale default
+			// (flag_code == code) and empty values.
+			if ( '' !== $flag_code && strtolower( $flag_code ) !== strtolower( $code ) ) {
+				continue;
+			}
+
+			$resolved = FlagResolver::countryCode( $code );
+
+			if ( '' === $resolved || strtoupper( $resolved ) === strtoupper( $flag_code ) ) {
+				continue;
+			}
+
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+			$wpdb->update( $table, array( 'flag_code' => $resolved ), array( 'code' => $code ) );
+		}
 	}
 
 }

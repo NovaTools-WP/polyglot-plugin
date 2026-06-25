@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+<ruleset name="NovaTools Polyglot">
+	<description>
+		Security and correctness coding standard for NovaTools Polyglot.
+
+		The codebase follows PSR-4 + CamelCase conventions rather than the
+		WordPress snake_case / file-naming style, so the naming and documentation
+		sniffs from WordPress-VIP are intentionally excluded. This ruleset keeps
+		the high-value checks: output escaping, nonce verification, input
+		sanitisation, and SQL preparation.
+
+		The enforced set currently covers tests/ — the new code meeting the bar.
+		src/ is brought under this standard incrementally; the existing src/ tree
+		carries pre-existing security/DB debt catalogued for later-phase hardening
+		(see IMPROVEMENT-ROADMAP.md, Phase 7). Run `composer phpcs -- src/...`
+		on any file you change in src/ and keep it clean.
+	</description>
+
+	<!-- Enforced: new code that meets the bar. -->
+	<file>tests/</file>
+
+	<exclude-pattern>*/vendor/*</exclude-pattern>
+	<exclude-pattern>*/node_modules/*</exclude-pattern>
+
+	<arg name="colors"/>
+
+	<!-- Security: escaping, nonce verification, sanitised input, safe redirects. -->
+	<rule ref="WordPress.Security"/>
+
+	<!-- Database: prepared statements, direct queries, slow queries. -->
+	<rule ref="WordPress.DB"/>
+
+	<!-- General correctness. -->
+	<rule ref="Generic.PHP.DisallowShortOpenTag"/>
+	<rule ref="Generic.PHP.LowerCaseConstant"/>
+	<rule ref="Squiz.PHP.Eval"/>
+	<rule ref="Squiz.PHP.DiscouragedFunctions"/>
+
+	<!--
+		Tests are not WordPress request entry points and run under Brain\Monkey,
+		so nonce verification and input sanitisation do not apply there.
+	-->
+	<rule ref="WordPress.Security.NonceVerification">
+		<exclude-pattern>*/tests/*</exclude-pattern>
+	</rule>
+	<rule ref="WordPress.Security.ValidatedSanitizedInput">
+		<exclude-pattern>*/tests/*</exclude-pattern>
+	</rule>
+</ruleset>

@@ -6,7 +6,7 @@
  * Author: NovaTools
  * Author URI: https://novatools.ww0.dev
  * License: GPLv2 or later
- * Version: 1.0.0
+ * Version: 1.0.2
  * Requires at least: 6.0
  * Requires PHP: 8.1
  * Text Domain: novatools-polyglot

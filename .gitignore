@@ -8,6 +8,10 @@ dist-ssr/
 release/
 assets/admin/dist/
 
+# Test / CI caches
+.phpunit.result.cache
+.phpunit.cache/
+
 # Build & dev tooling (should not ship)
 build-zip.sh
 benchmark.php

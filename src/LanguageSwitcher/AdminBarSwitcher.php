@@ -14,8 +14,8 @@
 
 namespace NovaTools\Polyglot\LanguageSwitcher;
 
+use NovaTools\Polyglot\Language\FlagResolver;
 use NovaTools\Polyglot\Language\LanguageRepository;
-use NovaTools\Polyglot\Language\Language;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -186,7 +186,7 @@ class AdminBarSwitcher {
 			: strtoupper( $current );
 
 		$parent_icon = $current_lang
-			? $this->getFlagEmoji( $current_lang )
+			? FlagResolver::emoji( $current_lang->code )
 			: '🌐';
 
 		$wp_admin_bar->add_node( array(
@@ -209,7 +209,7 @@ class AdminBarSwitcher {
 				continue;
 			}
 
-			$flag = $this->getFlagEmoji( $lang );
+			$flag = FlagResolver::emoji( $lang->code );
 			$switch_url = $this->getSwitchUrl( $lang->code );
 
 			$wp_admin_bar->add_node( array(
@@ -277,47 +277,6 @@ class AdminBarSwitcher {
 		}
 
 		return add_query_arg( self::QUERY_PARAM, $code, $url );
-	}
-
-	/**
-	 * Get a flag emoji for a language.
-	 *
-	 * Uses the regional indicator symbols derived from the flag code.
-	 *
-	 * @param Language $lang The language object.
-	 * @return string Flag emoji character.
-	 */
-	private function getFlagEmoji( Language $lang ): string {
-		$flag_code = strtoupper( $lang->flagCode );
-
-		// Handle codes like "EN" (not a country code) — try language code instead.
-		if ( 2 === strlen( $flag_code ) ) {
-			return $this->codeToEmoji( $flag_code );
-		}
-
-		// Handle compound codes like "DE_CH" — use the first part.
-		$parts = explode( '_', $flag_code );
-
-		return $this->codeToEmoji( $parts[0] );
-	}
-
-	/**
-	 * Convert a 2-letter country code to a regional indicator emoji.
-	 *
-	 * @param string $code Two-letter country code (uppercase).
-	 * @return string Flag emoji.
-	 */
-	private function codeToEmoji( string $code ): string {
-		if ( 2 !== strlen( $code ) ) {
-			return '🌐';
-		}
-
-		// Regional indicator symbols: A = U+1F1E6, B = U+1F1E7, etc.
-		$ord_a = ord( 'A' );
-		$char1 = mb_chr( 0x1F1E6 + ( ord( $code[0] ) - $ord_a ), 'UTF-8' );
-		$char2 = mb_chr( 0x1F1E6 + ( ord( $code[1] ) - $ord_a ), 'UTF-8' );
-
-		return $char1 . $char2;
 	}
 
 	/**

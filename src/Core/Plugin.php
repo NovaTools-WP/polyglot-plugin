@@ -126,6 +126,12 @@ class Plugin {
 		// Provide active language codes via filter for URL strategies.
 		add_filter( 'polyglot_active_language_codes', array( $this, 'filterActiveLanguageCodes' ) );
 
+		// Wire the frontend locale switcher early so that theme/plugin MO
+		// files load for the active language before any other service runs.
+		if ( $this->has( 'locale.switcher' ) ) {
+			$this->get( 'locale.switcher' )->register();
+		}
+
 		// Wire URL routing services.
 		if ( $this->has( 'url.converter' ) ) {
 			$converter = $this->get( 'url.converter' );

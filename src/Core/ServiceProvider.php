@@ -36,6 +36,7 @@ class ServiceProvider implements ServiceProviderInterface {
 		$this->registerLanguageSwitcherServices( $container );
 		$this->registerAdminServices( $container );
 		$this->registerWooCommerceServices( $container );
+		$this->registerTranslationApiServices( $container );
 		$this->registerRestControllers( $container );
 	}
 
@@ -57,6 +58,12 @@ class ServiceProvider implements ServiceProviderInterface {
 
 		$container['cache'] = static function ( Container $c ): Cache {
 			return new Cache();
+		};
+
+		// Frontend locale switcher — makes WP core load the correct .mo
+		// for the active language. Depends on the locale mapper.
+		$container['locale.switcher'] = static function ( Container $c ): \NovaTools\Polyglot\Support\LocaleSwitcher {
+			return new \NovaTools\Polyglot\Support\LocaleSwitcher( $c['locale.mapper'] );
 		};
 	}
 
@@ -409,6 +416,27 @@ class ServiceProvider implements ServiceProviderInterface {
 				$c['woocommerce.currency_switcher'],
 				$c['woocommerce.email_translator']
 			);
+		};
+	}
+
+	/**
+	 * Register the translation API (machine/AI translation) services.
+	 *
+	 * Wires the provider registry and the auto-translator that the
+	 * `AutoTranslateController` REST endpoint and the `wp polyglot` auto-translate
+	 * commands depend on. The three built-in providers (DeepL, Google, OpenAI)
+	 * are instantiated inside `ProviderRegistry::all()`, so registering the
+	 * registry here makes all three available automatically.
+	 *
+	 * @param Container $container The DI container instance.
+	 */
+	private function registerTranslationApiServices( Container $container ): void {
+		$container['provider.registry'] = static function ( Container $c ): \NovaTools\Polyglot\TranslationApi\ProviderRegistry {
+			return new \NovaTools\Polyglot\TranslationApi\ProviderRegistry( $c['hooks'], $c['options'] );
+		};
+
+		$container['auto.translator'] = static function ( Container $c ): \NovaTools\Polyglot\TranslationApi\AutoTranslator {
+			return new \NovaTools\Polyglot\TranslationApi\AutoTranslator( $c['provider.registry'], $c['options'] );
 		};
 	}
 

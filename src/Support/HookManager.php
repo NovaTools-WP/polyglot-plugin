@@ -73,6 +73,36 @@ class HookManager {
 	}
 
 	/**
+	 * Apply a WordPress filter and return the filtered value.
+	 *
+	 * Symmetric counterpart to addFilter(): lets services dispatch filters
+	 * through the same manager they use to register them, without reaching
+	 * for the global apply_filters() directly.
+	 *
+	 * @param string $hook    The filter hook name.
+	 * @param mixed   $value   The value being filtered.
+	 * @param mixed   ...$args Additional arguments passed to the callbacks.
+	 * @return mixed The filtered value.
+	 */
+	public function applyFilters( string $hook, mixed $value, mixed ...$args ): mixed {
+		return apply_filters( $hook, $value, ...$args );
+	}
+
+	/**
+	 * Fire a WordPress action.
+	 *
+	 * Symmetric counterpart to addAction(): lets services dispatch actions
+	 * through the same manager they use to register them.
+	 *
+	 * @param string $hook    The action hook name.
+	 * @param mixed   ...$args Arguments passed to the callbacks.
+	 * @return void
+	 */
+	public function doAction( string $hook, mixed ...$args ): void {
+		do_action( $hook, ...$args );
+	}
+
+	/**
 	 * Remove all hooks registered in a given group.
 	 *
 	 * Useful for disabling a module's hooks without tracking individual

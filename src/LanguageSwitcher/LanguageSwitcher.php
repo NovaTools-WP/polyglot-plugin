@@ -17,6 +17,7 @@
 namespace NovaTools\Polyglot\LanguageSwitcher;
 
 use NovaTools\Polyglot\Core\Plugin;
+use NovaTools\Polyglot\Language\FlagResolver;
 use NovaTools\Polyglot\Language\Language;
 use NovaTools\Polyglot\Language\LanguageRepository;
 use NovaTools\Polyglot\Translation\ContentTranslator;
@@ -159,20 +160,19 @@ class LanguageSwitcher {
 	 * @return string Flag image URL, or empty string.
 	 */
 	public function getFlagUrl( Language $lang ): string {
-		$flag_file = strtolower( $lang->flagCode ) . '.png';
+		// Resolve the flag from the language code (not the stored flag_code),
+		// so the correct country flag is used (e.g. "et" → "ee.png").
+		$country = strtolower( FlagResolver::countryCode( $lang->code ) );
+
+		if ( '' === $country ) {
+			return '';
+		}
+
+		$flag_file = $country . '.png';
 		$path      = NOVATOOLS_POLYGLOT_DIR . 'assets/images/flags/' . $flag_file;
 
 		if ( file_exists( $path ) ) {
 			return NOVATOOLS_POLYGLOT_ASSETS_URL . '/images/flags/' . $flag_file;
-		}
-
-		// Use the first part of the code as fallback (e.g. "de_CH" → "de").
-		$parts     = explode( '_', $lang->flagCode );
-		$fallback  = strtolower( $parts[0] ) . '.png';
-		$fallback_path = NOVATOOLS_POLYGLOT_DIR . 'assets/images/flags/' . $fallback;
-
-		if ( file_exists( $fallback_path ) ) {
-			return NOVATOOLS_POLYGLOT_ASSETS_URL . '/images/flags/' . $fallback;
 		}
 
 		return '';

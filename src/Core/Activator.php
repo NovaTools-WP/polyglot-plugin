@@ -12,6 +12,7 @@
 namespace NovaTools\Polyglot\Core;
 
 use NovaTools\Polyglot\Database\Schema;
+use NovaTools\Polyglot\Language\FlagResolver;
 use NovaTools\Polyglot\TranslationApi\OpenAIProvider;
 use NovaTools\Polyglot\WooCommerce\Currency\ExchangeRateService;
 
@@ -93,7 +94,7 @@ class Activator
                 'is_active'     => $lang['is_active'] ?? 0,
                 'is_default'    => 0,
                 'direction'     => $lang['direction'] ?? 'ltr',
-                'flag_code'     => $lang['flag_code'] ?? $lang['code'],
+                'flag_code'     => $lang['flag_code'] ?? ( FlagResolver::countryCode( $lang['code'] ) ?: $lang['code'] ),
                 'flag_url'      => '',
                 'date_format'   => $lang['date_format'] ?? '',
                 'time_format'   => $lang['time_format'] ?? '',
